@@ -67,3 +67,32 @@ module.exports = {
 ```
 
 3. 运行 npm run lint
+
+## 编译打包确认环境变量
+1. Mode 的概念
+Mode is an important concept in Vue CLI projects. By default, there are three modes:
+
+- development is used by vue-cli-service serve
+- test is used by vue-cli-service test:unit
+- production is used by vue-cli-service build and vue-cli-service test:e2e
+
+You can overwrite the default mode used for a command by passing the --mode option flag. For example, if you want to use development variables in the build command:
+``` json
+  "scripts": {
+    "dev": "vue-cli-service serve",
+    "test": "vue-cli-service serve --https --mode mytest",
+    "staging": "vue-cli-service build --mode staging",
+```
+2. mode 决定了打包用哪个环境变量文件 
+```
+.env                # loaded in all cases
+.env.local          # loaded in all cases, ignored by git
+.env.[mode]         # only loaded in specified mode
+.env.[mode].local   # only loaded in specified mode, ignored by git
+```
+
+In addition to VUE_APP_* variables, there are also two special variables that will always be available in your app code:
+
+- NODE_ENV - this will be one of "development", "production" or "test" depending on the mode the app is running in.
+- BASE_URL - this corresponds to the publicPath option in vue.config.js and is the base path your app is deployed at.
+- 环境变量文件中可以再申明 NODE_ENV, 例如在 .env.staging 中设置 ** NODE_ENV=production **, 确认打包时可以优化 staging 下的代码
