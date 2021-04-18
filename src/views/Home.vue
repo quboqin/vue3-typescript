@@ -9,6 +9,9 @@
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
+
+import { User } from 'quboqin-lib-typescript/lib/user'
+
 import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
 
 import { result } from '@/utils/axios'
@@ -16,8 +19,6 @@ import { result } from '@/utils/axios'
 const getUserById = (params: Record<string, unknown> = {}) => {
   return result('get', '/users', params)
 }
-
-type User = Record<string, unknown>
 
 @Options({
   components: {
@@ -28,7 +29,8 @@ export default class Home extends Vue {
   user: User = { id: 'bff28903-042e-47c2-b9ee-07c3954989ec' }
 
   async onGetUserById(): Promise<unknown> {
-    return await getUserById(this.user)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return await getUserById(this.user as any)
   }
 
   async onGetUsers(): Promise<unknown> {
