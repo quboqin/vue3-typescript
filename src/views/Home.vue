@@ -26,7 +26,7 @@ const getUserById = (params: Record<string, unknown> = {}) => {
   },
 })
 export default class Home extends Vue {
-  user: User = { id: 'bff28903-042e-47c2-b9ee-07c3954989ec' }
+  user: User = { userId: 'bff28903-042e-47c2-b9ee-07c3954989ec' }
 
   async onGetUserById(): Promise<unknown> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
