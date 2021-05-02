@@ -14,7 +14,7 @@ frontend:
       commands:
         - nvm use $VERSION_NODE_10
         - node -v
-        - if [ "${AWS_BRANCH}" = "staging" ]; then echo "staging branch" && npm run build -- --mode staging; elif [ "${AWS_BRANCH}" = "test" ]; then echo "test branch" && npm run build -- --mode mytest; else echo "production branch" && npm run build; fi
+        - if [ "${AWS_BRANCH}" = "aws-staging" ]; then echo "staging branch" && npm run build -- --mode staging; elif [ "${AWS_BRANCH}" = "aws-test" ]; then echo "test branch" && npm run build -- --mode mytest; else echo "production branch" && npm run build; fi
   artifacts:
     baseDirectory: dist
     files:
