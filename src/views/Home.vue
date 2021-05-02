@@ -20,6 +20,10 @@ const getUserById = (params: Record<string, unknown> = {}) => {
   return result('get', '/users', params)
 }
 
+const checkHealth = (params: Record<string, unknown> = {}) => {
+  return result('get', '/health', params)
+}
+
 @Options({
   components: {
     HelloWorld,
@@ -35,6 +39,11 @@ export default class Home extends Vue {
 
   async onGetUsers(): Promise<unknown> {
     return await getUserById()
+  }
+
+  async mounted(): Promise<void> {
+    console.log('mounted')
+    await checkHealth()
   }
 }
 </script>

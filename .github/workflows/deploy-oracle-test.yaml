@@ -1,8 +1,8 @@
-name: SSH Deploy Test
+name: Deploy Static Website to Test
 
 on:
   push:
-    branches: [ test ]
+    branches: [oracle-test]
 
 jobs:
   deploy:
@@ -25,10 +25,10 @@ jobs:
           HOST: ${{ secrets.DEPLOY_HOST }}
           USERNAME: ${{ secrets.DEPLOY_USER }}
           PORT: ${{ secrets.DEPLOY_PORT }}
-          KEY: ${{ secrets.DEPLOY_KEY }}        
+          KEY: ${{ secrets.DEPLOY_KEY }}
         with:
-          source: "dist/"
-          target: ${{ secrets.DEPLOY_TARGET }}/test
+          source: 'dist/'
+          target: ${{ secrets.DEPLOY_ORACLE }}/test
           strip_components: 1
       - name: executing remote command
         uses: appleboy/ssh-action@master
