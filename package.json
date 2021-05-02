@@ -6,7 +6,7 @@
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build --mode ${NODE_ENV}",
     "build:production": "vue-cli-service build --mode production",
-    "build:test": "vue-cli-service build --mode mytest",
+    "build:mytest": "vue-cli-service build --mode mytest",
     "build:staging": "vue-cli-service build --mode staging",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
