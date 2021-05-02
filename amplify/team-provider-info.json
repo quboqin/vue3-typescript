@@ -1,0 +1,28 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-vue3typescript-staging-185346-authRole",
+      "UnauthRoleArn": "arn:aws:iam::403593870368:role/amplify-vue3typescript-staging-185346-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::403593870368:role/amplify-vue3typescript-staging-185346-authRole",
+      "Region": "ap-northeast-1",
+      "DeploymentBucketName": "amplify-vue3typescript-staging-185346-deployment",
+      "UnauthRoleName": "amplify-vue3typescript-staging-185346-unauthRole",
+      "StackName": "amplify-vue3typescript-staging-185346",
+      "StackId": "arn:aws:cloudformation:ap-northeast-1:403593870368:stack/amplify-vue3typescript-staging-185346/afdbaa70-ab34-11eb-bd11-06875c6e8b4f",
+      "AmplifyAppId": "d3e3nuj8f2v05x"
+    }
+  },
+  "production": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-vue3typescript-production-185721-authRole",
+      "UnauthRoleArn": "arn:aws:iam::403593870368:role/amplify-vue3typescript-production-185721-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::403593870368:role/amplify-vue3typescript-production-185721-authRole",
+      "Region": "ap-northeast-1",
+      "DeploymentBucketName": "amplify-vue3typescript-production-185721-deployment",
+      "UnauthRoleName": "amplify-vue3typescript-production-185721-unauthRole",
+      "StackName": "amplify-vue3typescript-production-185721",
+      "StackId": "arn:aws:cloudformation:ap-northeast-1:403593870368:stack/amplify-vue3typescript-production-185721/2e56f800-ab35-11eb-a6f1-0aaf83215e2d",
+      "AmplifyAppId": "d3e3nuj8f2v05x"
+    }
+  }
+}
