@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const port = process.env.VUE_APP_PORT
-const url = process.env.VUE_APP_HEROKU_URL ?? process.env.VUE_APP_BASE_URL
+const url = process.env.VUE_APP_URL ?? process.env.VUE_APP_BASE_URL
 console.log(process.env.VUE_APP_BASE_URL)
 axios.defaults.baseURL = port ? `${url}:${process.env.VUE_APP_PORT}` : `${url}`
 axios.defaults.timeout = process.env.VUE_APP_TIMEOUT
