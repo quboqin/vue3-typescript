@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: test
+          ref: oracle-test
       - name: install Node.js
         uses: actions/setup-node@v1
         with:
