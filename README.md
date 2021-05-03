@@ -120,7 +120,7 @@ In addition to VUE*APP*\* variables, there are also two special variables that w
 
 ## 搭建持续集成和持续部署环境
 
-### 部署到 CentOS 8 服务器中的 Nginx 下
+### 部署到 Oracle CentOS 8 服务器中的 Nginx 下
 
 1. 配置 Nginx 支持单个端口对应多个二级域名的静态服务
 
@@ -166,6 +166,10 @@ certbot -nginx
 2. 在 .github/workflows 下添加 Github Actions
    **注意不要添加 NODE_ENV=production，设置了这个后 npm ci 不会 install devDependencies 下的模块，会导致 npm run build 报错无法找到 vue-cli-service**
    **Vue 的 Webpack 会根据 --mode [staging | production ] 找到对应的 .env.\* 文件， 在这些中再声明 NODE_ENV=production**
+
+3. 在 Github 的仓库设置中，给 Actions 用到的添加加密的 Secrets
+   ![github-secrets](./doc/github-secrets.png)
+   **DEPLOY_ORACLE=/usr/share/nginx/html**
 
 ### 部署到 Heroku
 
