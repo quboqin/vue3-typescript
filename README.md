@@ -1,5 +1,7 @@
 # # 基于 Typescript 的全栈工程模版 - 前端 Vue3
 
+参考[基于 Typescript 的全栈工程模版 - 后端 Node.js + Koa2](https://github.com/quboqin/node-koa2-typescript)
+
 ## Project setup
 
 ```
