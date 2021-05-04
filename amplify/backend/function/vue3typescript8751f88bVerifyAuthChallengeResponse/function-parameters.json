@@ -1,0 +1,15 @@
+{
+  "trigger": true,
+  "modules": [
+    "boilerplate-verify"
+  ],
+  "parentResource": "vue3typescript8751f88b",
+  "functionName": "vue3typescript8751f88bVerifyAuthChallengeResponse",
+  "resourceName": "vue3typescript8751f88bVerifyAuthChallengeResponse",
+  "parentStack": "auth",
+  "triggerEnvs": [],
+  "triggerDir": "/Users/qinqubo/.nvm/versions/node/v12.18.3/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-auth/provider-utils/awscloudformation/triggers/VerifyAuthChallengeResponse",
+  "triggerTemplate": "VerifyAuthChallengeResponse.json.ejs",
+  "roleName": "vue3typescript8751f88bVerifyAuthChallengeResponse",
+  "skipEdit": true
+}

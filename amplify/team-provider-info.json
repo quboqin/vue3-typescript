@@ -23,6 +23,37 @@
       "StackName": "amplify-vue3typescript-production-185721",
       "StackId": "arn:aws:cloudformation:ap-northeast-1:403593870368:stack/amplify-vue3typescript-production-185721/2e56f800-ab35-11eb-a6f1-0aaf83215e2d",
       "AmplifyAppId": "d3e3nuj8f2v05x"
+    },
+    "categories": {
+      "auth": {
+        "vue3typescriptacf0cf94": {},
+        "vue3typescript3a359265": {}
+      }
+    }
+  },
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-vue3typescript-dev-165923-authRole",
+      "UnauthRoleArn": "arn:aws:iam::403593870368:role/amplify-vue3typescript-dev-165923-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::403593870368:role/amplify-vue3typescript-dev-165923-authRole",
+      "Region": "ap-northeast-1",
+      "DeploymentBucketName": "amplify-vue3typescript-dev-165923-deployment",
+      "UnauthRoleName": "amplify-vue3typescript-dev-165923-unauthRole",
+      "StackName": "amplify-vue3typescript-dev-165923",
+      "StackId": "arn:aws:cloudformation:ap-northeast-1:403593870368:stack/amplify-vue3typescript-dev-165923/076abb40-acb7-11eb-ab9c-06766cd58472",
+      "AmplifyAppId": "d3e3nuj8f2v05x"
+    },
+    "categories": {
+      "function": {
+        "vue3typescript8751f88bDefineAuthChallenge": {},
+        "vue3typescript8751f88bCreateAuthChallenge": {
+          "CHALLENGEANSWER": "cyf is a bear"
+        },
+        "vue3typescript8751f88bVerifyAuthChallengeResponse": {}
+      },
+      "auth": {
+        "vue3typescript8751f88b": {}
+      }
     }
   }
 }
