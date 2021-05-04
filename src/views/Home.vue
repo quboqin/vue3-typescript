@@ -30,7 +30,10 @@ const checkHealth = (params: Record<string, unknown> = {}) => {
   },
 })
 export default class Home extends Vue {
-  user: User = { userId: 'bff28903-042e-47c2-b9ee-07c3954989ec' }
+  user: User = {
+    userId: '54304a48-5f75-46a1-9714-f3a53d38cedd',
+    phone: '+8613004151097',
+  }
 
   async onGetUserById(): Promise<unknown> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
