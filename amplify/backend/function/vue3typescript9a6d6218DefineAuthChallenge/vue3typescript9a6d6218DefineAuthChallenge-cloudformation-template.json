@@ -2,10 +2,6 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "Lambda resource stack creation using Amplify CLI",
   "Parameters": {
-    "CHALLENGEANSWER": {
-      "Type": "String",
-      "Default": ""
-    },
     "modules": {
       "Type": "String",
       "Default": "",
@@ -61,12 +57,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "vue3typescript8751f88bCreateAuthChallenge",
+            "vue3typescript9a6d6218DefineAuthChallenge",
             {
               "Fn::Join": [
                 "",
                 [
-                  "vue3typescript8751f88bCreateAuthChallenge",
+                  "vue3typescript9a6d6218DefineAuthChallenge",
                   "-",
                   {
                     "Ref": "env"
@@ -86,9 +82,6 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
-            },
-            "CHALLENGEANSWER": {
-              "Ref": "CHALLENGEANSWER"
             }
           }
         },
@@ -101,8 +94,8 @@
         "Runtime": "nodejs10.x",
         "Timeout": "25",
         "Code": {
-          "S3Bucket": "amplify-vue3typescript-dev-165923-deployment",
-          "S3Key": "amplify-builds/vue3typescript8751f88bCreateAuthChallenge-74315a59526e74596156-build.zip"
+          "S3Bucket": "amplify-vue3typescript-production-185721-deployment",
+          "S3Key": "amplify-builds/vue3typescript9a6d6218DefineAuthChallenge-785253636e53774d4858-build.zip"
         }
       }
     },
@@ -112,12 +105,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "vue3typescript8751f88bCreateAuthChallenge",
+            "vue3typescript9a6d6218DefineAuthChallenge",
             {
               "Fn::Join": [
                 "",
                 [
-                  "vue3typescript8751f88bCreateAuthChallenge",
+                  "vue3typescript9a6d6218DefineAuthChallenge",
                   "-",
                   {
                     "Ref": "env"

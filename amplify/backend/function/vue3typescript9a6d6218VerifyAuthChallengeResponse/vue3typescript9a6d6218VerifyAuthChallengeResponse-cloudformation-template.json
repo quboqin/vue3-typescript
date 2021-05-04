@@ -2,6 +2,10 @@
   "AWSTemplateFormatVersion": "2010-09-09",
   "Description": "Lambda resource stack creation using Amplify CLI",
   "Parameters": {
+    "RECAPTCHASECRET": {
+      "Type": "String",
+      "Default": ""
+    },
     "modules": {
       "Type": "String",
       "Default": "",
@@ -57,12 +61,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "vue3typescript8751f88bDefineAuthChallenge",
+            "vue3typescript9a6d6218VerifyAuthChallengeResponse",
             {
               "Fn::Join": [
                 "",
                 [
-                  "vue3typescript8751f88bDefineAuthChallenge",
+                  "vue3typescript9a6d6218VerifyAuthChallengeResponse",
                   "-",
                   {
                     "Ref": "env"
@@ -82,6 +86,9 @@
             },
             "REGION": {
               "Ref": "AWS::Region"
+            },
+            "RECAPTCHASECRET": {
+              "Ref": "RECAPTCHASECRET"
             }
           }
         },
@@ -94,8 +101,8 @@
         "Runtime": "nodejs10.x",
         "Timeout": "25",
         "Code": {
-          "S3Bucket": "amplify-vue3typescript-dev-165923-deployment",
-          "S3Key": "amplify-builds/vue3typescript8751f88bDefineAuthChallenge-47394d414e7770704145-build.zip"
+          "S3Bucket": "amplify-vue3typescript-production-185721-deployment",
+          "S3Key": "amplify-builds/vue3typescript9a6d6218VerifyAuthChallengeResponse-646d674739674f457138-build.zip"
         }
       }
     },
@@ -105,12 +112,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "vue3typescript8751f88bDefineAuthChallenge",
+            "vue3typescript9a6d6218VerifyAuthChallengeResponse",
             {
               "Fn::Join": [
                 "",
                 [
-                  "vue3typescript8751f88bDefineAuthChallenge",
+                  "vue3typescript9a6d6218VerifyAuthChallengeResponse",
                   "-",
                   {
                     "Ref": "env"

@@ -1,12 +1,12 @@
 {
   "auth": {
-    "vue3typescript8751f88b": {
+    "vue3typescript9a6d6218": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "vue3typescript8751f88bDefineAuthChallenge",
+          "resourceName": "vue3typescript9a6d6218DefineAuthChallenge",
           "triggerProvider": "Cognito",
           "attributes": [
             "Arn",
@@ -15,7 +15,7 @@
         },
         {
           "category": "function",
-          "resourceName": "vue3typescript8751f88bCreateAuthChallenge",
+          "resourceName": "vue3typescript9a6d6218CreateAuthChallenge",
           "triggerProvider": "Cognito",
           "attributes": [
             "Arn",
@@ -24,7 +24,7 @@
         },
         {
           "category": "function",
-          "resourceName": "vue3typescript8751f88bVerifyAuthChallengeResponse",
+          "resourceName": "vue3typescript9a6d6218VerifyAuthChallengeResponse",
           "triggerProvider": "Cognito",
           "attributes": [
             "Arn",
@@ -36,17 +36,17 @@
     }
   },
   "function": {
-    "vue3typescript8751f88bDefineAuthChallenge": {
+    "vue3typescript9a6d6218DefineAuthChallenge": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "vue3typescript8751f88bCreateAuthChallenge": {
+    "vue3typescript9a6d6218CreateAuthChallenge": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "vue3typescript8751f88bVerifyAuthChallengeResponse": {
+    "vue3typescript9a6d6218VerifyAuthChallengeResponse": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"

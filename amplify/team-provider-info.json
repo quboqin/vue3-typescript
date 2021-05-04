@@ -27,7 +27,14 @@
     "categories": {
       "auth": {
         "vue3typescriptacf0cf94": {},
-        "vue3typescript3a359265": {}
+        "vue3typescript9a6d6218": {}
+      },
+      "function": {
+        "vue3typescript9a6d6218DefineAuthChallenge": {},
+        "vue3typescript9a6d6218CreateAuthChallenge": {
+          "CHALLENGEANSWER": "cyf is a bear"
+        },
+        "vue3typescript9a6d6218VerifyAuthChallengeResponse": {}
       }
     }
   },

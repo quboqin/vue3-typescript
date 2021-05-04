@@ -3,14 +3,14 @@
   "modules": [
     "boilerplate-create-challenge"
   ],
-  "parentResource": "vue3typescript8751f88b",
-  "functionName": "vue3typescript8751f88bCreateAuthChallenge",
-  "resourceName": "vue3typescript8751f88bCreateAuthChallenge",
+  "parentResource": "vue3typescript9a6d6218",
+  "functionName": "vue3typescript9a6d6218CreateAuthChallenge",
+  "resourceName": "vue3typescript9a6d6218CreateAuthChallenge",
   "parentStack": "auth",
   "triggerEnvs": [],
   "triggerDir": "/Users/qinqubo/.nvm/versions/node/v12.18.3/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-auth/provider-utils/awscloudformation/triggers/CreateAuthChallenge",
   "triggerTemplate": "CreateAuthChallenge.json.ejs",
-  "roleName": "vue3typescript8751f88bCreateAuthChallenge",
+  "roleName": "vue3typescript9a6d6218CreateAuthChallenge",
   "skipEdit": true,
   "CHALLENGEANSWER": "cyf is a bear"
 }
