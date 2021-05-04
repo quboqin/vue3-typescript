@@ -26,15 +26,7 @@
     },
     "categories": {
       "auth": {
-        "vue3typescriptacf0cf94": {},
-        "vue3typescript9a6d6218": {}
-      },
-      "function": {
-        "vue3typescript9a6d6218DefineAuthChallenge": {},
-        "vue3typescript9a6d6218CreateAuthChallenge": {
-          "CHALLENGEANSWER": "cyf is a bear"
-        },
-        "vue3typescript9a6d6218VerifyAuthChallengeResponse": {}
+        "vue3typescriptacf0cf94": {}
       }
     }
   },
@@ -49,18 +41,6 @@
       "StackName": "amplify-vue3typescript-dev-165923",
       "StackId": "arn:aws:cloudformation:ap-northeast-1:403593870368:stack/amplify-vue3typescript-dev-165923/076abb40-acb7-11eb-ab9c-06766cd58472",
       "AmplifyAppId": "d3e3nuj8f2v05x"
-    },
-    "categories": {
-      "function": {
-        "vue3typescript8751f88bDefineAuthChallenge": {},
-        "vue3typescript8751f88bCreateAuthChallenge": {
-          "CHALLENGEANSWER": "cyf is a bear"
-        },
-        "vue3typescript8751f88bVerifyAuthChallengeResponse": {}
-      },
-      "auth": {
-        "vue3typescript8751f88b": {}
-      }
     }
   }
 }
