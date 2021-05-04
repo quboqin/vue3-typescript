@@ -31,7 +31,7 @@ const checkHealth = (params: Record<string, unknown> = {}) => {
 })
 export default class Home extends Vue {
   user: User = {
-    userId: '54304a48-5f75-46a1-9714-f3a53d38cedd',
+    userId: '4d53f6c8-528e-4c79-ac05-d296ba1a5a90',
     phone: '+8613004151097',
   }
 
