@@ -41,6 +41,18 @@
       "StackName": "amplify-vue3typescript-dev-165923",
       "StackId": "arn:aws:cloudformation:ap-northeast-1:403593870368:stack/amplify-vue3typescript-dev-165923/076abb40-acb7-11eb-ab9c-06766cd58472",
       "AmplifyAppId": "d3e3nuj8f2v05x"
+    },
+    "categories": {
+      "function": {
+        "vue3typescript360b0231DefineAuthChallenge": {},
+        "vue3typescript360b0231CreateAuthChallenge": {
+          "CHALLENGEANSWER": ""
+        },
+        "vue3typescript360b0231VerifyAuthChallengeResponse": {}
+      },
+      "auth": {
+        "vue3typescript360b0231": {}
+      }
     }
   }
 }

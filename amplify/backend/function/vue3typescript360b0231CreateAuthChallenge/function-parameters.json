@@ -1,0 +1,16 @@
+{
+  "trigger": true,
+  "modules": [
+    "boilerplate-create-challenge"
+  ],
+  "parentResource": "vue3typescript360b0231",
+  "functionName": "vue3typescript360b0231CreateAuthChallenge",
+  "resourceName": "vue3typescript360b0231CreateAuthChallenge",
+  "parentStack": "auth",
+  "triggerEnvs": [],
+  "triggerDir": "/Users/qinqubo/.nvm/versions/node/v12.18.3/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-auth/provider-utils/awscloudformation/triggers/CreateAuthChallenge",
+  "triggerTemplate": "CreateAuthChallenge.json.ejs",
+  "roleName": "vue3typescript360b0231CreateAuthChallenge",
+  "skipEdit": true,
+  "CHALLENGEANSWER": ""
+}
