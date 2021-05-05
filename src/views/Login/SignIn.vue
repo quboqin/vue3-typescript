@@ -31,7 +31,7 @@ export default defineComponent({
     }
 
     function onSubmit(): void {
-      updateToken('1369b1d6-85a8-4f2f-b4fa-d42fcb4c21e4')
+      updateToken('1369b1d6-85a8-4f2f-b4fa-d42fcb4c21e4_secret_token')
       console.log(`onSubmit`)
     }
 
