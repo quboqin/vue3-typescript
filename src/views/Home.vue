@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component'
+import { defineComponent, onMounted } from 'vue'
 
 import { User } from 'quboqin-lib-typescript/lib/user'
 
@@ -55,28 +55,36 @@ const checkHealth = (params: Record<string, unknown> = {}) => {
   return result('get', '/health', params)
 }
 
-@Options({
+export default defineComponent({
+  name: 'Home',
   components: {
     HelloWorld,
   },
+  setup() {
+    const user: User = {
+      userId: '4d53f6c8-528e-4c79-ac05-d296ba1a5a90',
+      phone: '+8613004151097',
+    }
+
+    async function onGetUserById(): Promise<unknown> {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return await getUserById(user as any)
+    }
+
+    async function onGetUsers(): Promise<unknown> {
+      return await getUserById()
+    }
+
+    onMounted(async () => {
+      await checkHealth()
+    })
+
+    return {
+      user,
+      onGetUserById,
+      onGetUsers,
+      onMounted,
+    }
+  },
 })
-export default class Home extends Vue {
-  user: User = {
-    userId: '4d53f6c8-528e-4c79-ac05-d296ba1a5a90',
-    phone: '+8613004151097',
-  }
-
-  async onGetUserById(): Promise<unknown> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return await getUserById(this.user as any)
-  }
-
-  async onGetUsers(): Promise<unknown> {
-    return await getUserById()
-  }
-
-  async mounted(): Promise<void> {
-    await checkHealth()
-  }
-}
 </script>

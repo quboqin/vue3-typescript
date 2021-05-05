@@ -17,22 +17,27 @@
 </template>
 
 <script lang="ts">
-import { Vue } from 'vue-class-component'
+import { defineComponent } from 'vue'
 
-export default class SignIn extends Vue {
-  user = ''
-  code = ''
+export default defineComponent({
+  name: 'Verify Code',
+  setup() {
+    const user = ''
+    const code = ''
 
-  onSelect(index: number): void {
-    console.log(`onSelect: ${index}`)
-  }
+    function onSelect(index: number): void {
+      console.log(`onSelect: ${index}`)
+    }
 
-  onSubmit(): void {
-    console.log(`onSubmit`)
-  }
+    function onSubmit(): void {
+      console.log(`onSubmit`)
+    }
 
-  onReset(): void {
-    console.log(`onReset`)
-  }
-}
+    function onReset(): void {
+      console.log(`onReset`)
+    }
+
+    return { user, code, onSelect, onSubmit, onReset }
+  },
+})
 </script>
