@@ -24,7 +24,7 @@ export default defineComponent({
   setup() {
     const user = ''
 
-    const code = ref(inject('userToken'))
+    const code = inject('userToken')
 
     function onSelect(index: number): void {
       console.log(`onSelect: ${index}`)
