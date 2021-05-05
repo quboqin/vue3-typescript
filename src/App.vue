@@ -1,9 +1,27 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view />
+  <el-container>
+    <el-aside width="200px">
+      <el-menu default-active="1" router="true">
+        <el-menu-item index="/">
+          <i class="el-icon-home"></i>
+          <span>Home</span>
+        </el-menu-item>
+        <el-menu-item index="/signUp">
+          <i class="el-icon-user"></i>
+          <span>Sign Up</span>
+        </el-menu-item>
+        <el-menu-item index="/signIn">
+          <i class="el-icon-user-solid"></i>
+          <span>Sign In</span>
+        </el-menu-item>
+        <el-menu-item index="/verifyCode">
+          <i class="el-icon-finished"></i>
+          <span>Verify Code</span>
+        </el-menu-item>
+      </el-menu>
+    </el-aside>
+    <el-main><router-view /></el-main>
+  </el-container>
 </template>
 
 <style lang="stylus">

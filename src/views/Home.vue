@@ -1,9 +1,12 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
     <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
-    <div><button v-on:click="onGetUserById">Get user by id</button></div>
-    <div><button v-on:click="onGetUsers">Get users</button></div>
+    <el-button type="primary" icon="el-icon-search" @click="onGetUserById"
+      >Get a user by id</el-button
+    >
+    <el-button type="primary" icon="el-icon-zoom-in" @click="onGetUsers"
+      >Get all users</el-button
+    >
   </div>
 </template>
 
@@ -45,7 +48,6 @@ export default class Home extends Vue {
   }
 
   async mounted(): Promise<void> {
-    console.log('mounted')
     await checkHealth()
   }
 }
