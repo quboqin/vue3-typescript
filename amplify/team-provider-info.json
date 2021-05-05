@@ -44,7 +44,8 @@
       "function": {
         "vue3typescript360b0231DefineAuthChallenge": {},
         "vue3typescript360b0231CreateAuthChallenge": {},
-        "vue3typescript360b0231VerifyAuthChallengeResponse": {}
+        "vue3typescript360b0231VerifyAuthChallengeResponse": {},
+        "vue3typescript360b0231PreSignup": {}
       }
     }
   }

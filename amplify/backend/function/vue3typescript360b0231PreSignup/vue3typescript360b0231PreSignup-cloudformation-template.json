@@ -68,7 +68,7 @@
         "Layers": [],
         "Timeout": "25",
         "Code": {
-          "S3Bucket": "amplify-vue3typescript-dev-165923-deployment",
+          "S3Bucket": "amplify-vue3typescript-online-191406-deployment",
           "S3Key": "amplify-builds/vue3typescript360b0231PreSignup-32635877676c44313173-build.zip"
         }
       }
