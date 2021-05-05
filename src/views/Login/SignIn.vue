@@ -18,10 +18,12 @@
 <script lang="ts">
 import { defineComponent, inject } from 'vue'
 
+type UpdateTokenFun = (newToken: string) => void
+
 export default defineComponent({
   name: 'Sign In',
   setup() {
-    let userToken = inject('userToken')
+    const updateToken = inject('updateToken') as UpdateTokenFun
     const user = ''
 
     function onSelect(index: number): void {
@@ -29,7 +31,7 @@ export default defineComponent({
     }
 
     function onSubmit(): void {
-      userToken = '1369b1d6-85a8-4f2f-b4fa-d42fcb4c21e4'
+      updateToken('1369b1d6-85a8-4f2f-b4fa-d42fcb4c21e4')
       console.log(`onSubmit`)
     }
 
@@ -37,7 +39,7 @@ export default defineComponent({
       console.log(`onReset`)
     }
 
-    return { userToken, user, onSelect, onSubmit, onReset }
+    return { updateToken, user, onSelect, onSubmit, onReset }
   },
 })
 </script>
