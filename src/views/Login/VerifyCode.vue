@@ -17,13 +17,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, inject } from 'vue'
 
 export default defineComponent({
   name: 'Verify Code',
   setup() {
     const user = ''
-    const code = ''
+    let code = inject('userToken') as string
 
     function onSelect(index: number): void {
       console.log(`onSelect: ${index}`)

@@ -16,11 +16,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, inject } from 'vue'
 
 export default defineComponent({
   name: 'Sign In',
   setup() {
+    let userToken = inject('userToken')
     const user = ''
 
     function onSelect(index: number): void {
@@ -28,6 +29,7 @@ export default defineComponent({
     }
 
     function onSubmit(): void {
+      userToken = '1369b1d6-85a8-4f2f-b4fa-d42fcb4c21e4'
       console.log(`onSubmit`)
     }
 
@@ -35,7 +37,7 @@ export default defineComponent({
       console.log(`onReset`)
     }
 
-    return { user, onSelect, onSubmit, onReset }
+    return { userToken, user, onSelect, onSubmit, onReset }
   },
 })
 </script>

@@ -24,6 +24,16 @@
   </el-container>
 </template>
 
+<script lang="ts">
+import { defineComponent, provide, ref } from 'vue'
+export default defineComponent({
+  setup() {
+    const userToken = ref('secret_token_9df91e67-9af6-4ffe-9322-a5a27a829210')
+    provide('userToken', userToken)
+  },
+})
+</script>
+
 <style lang="stylus">
 #app
   font-family Avenir, Helvetica, Arial, sans-serif
