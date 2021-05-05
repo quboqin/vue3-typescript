@@ -3,7 +3,7 @@
     <el-aside width="200px">
       <el-menu default-active="1" router="true">
         <el-menu-item index="/">
-          <i class="el-icon-home"></i>
+          <i class="el-icon-s-home"></i>
           <span>Home</span>
         </el-menu-item>
         <el-menu-item index="/signUp">
@@ -29,7 +29,7 @@
   font-family Avenir, Helvetica, Arial, sans-serif
   -webkit-font-smoothing antialiased
   -moz-osx-font-smoothing grayscale
-  text-align center
+  text-align left
   color #2c3e50
   margin-top 60px
 </style>

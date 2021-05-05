@@ -1,13 +1,41 @@
 <template>
-  <div class="home">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
-    <el-button type="primary" icon="el-icon-search" @click="onGetUserById"
-      >Get a user by id</el-button
-    >
-    <el-button type="primary" icon="el-icon-zoom-in" @click="onGetUsers"
-      >Get all users</el-button
-    >
-  </div>
+  <el-container>
+    <el-header>
+      <HelloWorld
+        align="center"
+        msg="Welcome to Full Stack World + TypeScript App"
+      />
+    </el-header>
+    <el-main>
+      <el-row :gutter="20" justify="space-around">
+        <el-col :span="12">
+          <div align="center">Avatar</div>
+          <div align="center">
+            <el-image :src="require('@/assets/avatar.jpg')"></el-image>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div align="center">Vue</div>
+          <div align="center">
+            <el-image :src="require('@/assets/logo.png')"> </el-image>
+          </div>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20" justify="space-around">
+        <el-col :span="12" align="center">
+          <el-button type="primary" icon="el-icon-search" @click="onGetUserById"
+            >Get a user by id</el-button
+          ></el-col
+        >
+        <el-col :span="12" align="center">
+          <el-button type="primary" icon="el-icon-zoom-in" @click="onGetUsers"
+            >Get all users</el-button
+          ></el-col
+        >
+      </el-row>
+    </el-main>
+  </el-container>
 </template>
 
 <script lang="ts">

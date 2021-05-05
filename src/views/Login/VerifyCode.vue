@@ -1,5 +1,5 @@
 <template>
-  <el-header>Verify Code</el-header>
+  <el-header align="center">Verify Code</el-header>
   <el-main>
     <el-form label-width="200px">
       <el-form-item label="Phone or Email">
@@ -8,7 +8,7 @@
       <el-form-item label="Code">
         <el-input v-model="code"></el-input>
       </el-form-item>
-      <el-form-item>
+      <el-form-item align="right">
         <el-button type="primary" @click="onSubmit">Submit</el-button>
         <el-button @click="onReset">Reset</el-button>
       </el-form-item>

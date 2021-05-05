@@ -1,12 +1,12 @@
 <template>
   <el-container>
-    <el-header>Sign Up</el-header>
+    <el-header align="center">Sign Up</el-header>
     <el-main>
       <el-form label-width="200px">
         <el-form-item label="Phone or Email">
           <el-input v-model="user"></el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item align="right">
           <el-button type="primary" @click="onSubmit">Submit</el-button>
           <el-button @click="onReset">Reset</el-button>
         </el-form-item>
