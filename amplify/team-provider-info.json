@@ -17,7 +17,8 @@
         "vue3typescript360b0231CreateAuthChallenge": {
           "CHALLENGEANSWER": ""
         },
-        "vue3typescript360b0231VerifyAuthChallengeResponse": {}
+        "vue3typescript360b0231VerifyAuthChallengeResponse": {},
+        "vue3typescript360b0231PreSignup": {}
       },
       "auth": {
         "vue3typescript360b0231": {}
