@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { signIn, sendCustomChallengeAnswer } from '@/utils/aws-auth'
 import { userAuthInject } from '@/store/user'
 
@@ -27,13 +27,13 @@ export default defineComponent({
     const { userInfo, setCognitoUser } = userAuthInject()
 
     const user = userInfo.phone
-    const code = ''
+    const code = ref('')
 
     async function onSubmitOTP(): Promise<void> {
       const cognitoUser = userInfo.cognitoUser
       if (cognitoUser) {
         try {
-          await sendCustomChallengeAnswer(cognitoUser, code)
+          await sendCustomChallengeAnswer(cognitoUser, code.value)
         } catch (error) {
           if (error.code === 'UserLambdaValidationException') {
             const _cognitoUser = await signIn(

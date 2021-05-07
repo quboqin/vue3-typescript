@@ -4,7 +4,7 @@
     <el-main>
       <el-form label-width="200px">
         <el-form-item label="Phone or Email">
-          <el-input v-model="user"></el-input>
+          <el-input v-model="phoneOrEmail"></el-input>
         </el-form-item>
         <el-form-item align="right">
           <el-button type="primary" @click="onSignIn">Sign In</el-button>

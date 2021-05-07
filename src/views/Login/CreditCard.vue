@@ -1,9 +1,9 @@
 <template>
   <el-container>
-    <el-header align="center">Sign Up</el-header>
+    <el-header align="center">Credit Card</el-header>
     <el-main>
       <el-form label-width="200px">
-        <el-form-item label="Phone or Email">
+        <el-form-item label="Credit Card">
           <el-input v-model="creditCard"></el-input>
         </el-form-item>
         <el-form-item align="right">
