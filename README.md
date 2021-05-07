@@ -266,3 +266,71 @@ frontend:
 
 **创建 Amplify APP 时，好像没有自动创建关联的 Role**, 我手动创建了一个
 ![aws-role-amplify](./doc/aws-role-amplify.png)
+
+## Cognito 和 JWT 的支持
+### 手机短信登入
+#### 配置 Amplify 环境，添加 Auth 和 Functions
+##### 前期准备
+1. 未添加 Amplify 服务的项目，或者 clone 的项目，一般首先要运行
+```shell
+amplify init
+```
+如果没有设置过 AWS ，之前还要添加 AWS 命令行配置
+```shell
+aws configure
+```
+2. 查看 Amplify 状态
+```shell
+amplify status
+```
+Amplify 的 env 对应
+- 后端服务资源的配置
+- Lambda 函数
+- 添加环境后，`相当于`在项目中创建了一个 git 的子模块
+- 可以创建多个环境，不同的环境`相当于`不同的 git 分支，可以通过
+```shell]
+amplify env checkout <env-name>
+```
+在不同的环境下切换
+- 配置可以对应不同的后端资源，例如 Cognito 不同的 User Pool，和与之对应的其他权限资源
+- Lambda 函数可以在不同环境(分支)间共享
+- 如果两个环境完全独立，在两个完全独立的环境之间切换可以使用
+```shell
+amplify env checkout <env-name> [--restore]
+```
+- amplify 的前端环境可以选择不同的后端环境绑定
+  - 在 Amplify 后台， staging 和 production 的前端环境，绑定了 online 后端环境
+  ![aws-amplify-online](./doc/aws-amplify-online.png)
+  - 在本地的开发环境下，可以通过命令行灵活的切换环境 
+
+![amplify-backend-env](./doc/amplify-backend-env.png)
+##### 添加 Auth 和 Lambda
+1. 添加 Auth 和 默认的 Lambda functions
+```shell
+amplify add auth
+```
+![aws-amplify-custom-auth-1](./doc/aws-amplify-custom-auth-1.png)
+![aws-amplify-custom-auth-2](./doc/aws-amplify-custom-auth-2.png)
+![aws-amplify-custom-auth-3](./doc/aws-amplify-custom-auth-3.png)
+![aws-amplify-custom-auth-4](./doc/aws-amplify-custom-auth-4.png)
+
+2. 手动添加一个 PreSignup Lambda Function
+```shell
+amplify add fucntion
+```
+![aws-auth-function-presignup-1](./doc/aws-auth-function-presignup-1.png)
+
+去 Cognito 的 User Pool 后台，手动绑定 Trigger
+![aws-auth-function-presignup-2](./doc/aws-auth-function-presignup-2.png)
+
+3. 让 vue3typescript360b0231CreateAuthChallenge
+有发送 SNS 的权限
+进入 Lambda 的 后台页面，找到不同环境下的 vue3typescript360b0231CreateAuthChallenge 函数
+找到对应的 Role，在Role的后台添加 SNS 权限
+![aws-cognito-sns-permision](./doc/aws-cognito-sns-permision.png)
+
+4. 配置 SNS
+![aws-sns-profile](./doc/aws-sns-profile.png)
+#### 前端改造
+
+#### 后端 Check JWT token 的合法性
