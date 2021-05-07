@@ -6,10 +6,6 @@
           <i class="el-icon-s-home"></i>
           <span>Home</span>
         </el-menu-item>
-        <el-menu-item index="/signUp">
-          <i class="el-icon-user"></i>
-          <span>Sign Up</span>
-        </el-menu-item>
         <el-menu-item index="/signIn">
           <i class="el-icon-user-solid"></i>
           <span>Sign In</span>
@@ -17,6 +13,10 @@
         <el-menu-item index="/verifyCode">
           <i class="el-icon-finished"></i>
           <span>Verify Code</span>
+        </el-menu-item>
+        <el-menu-item index="/creditCard">
+          <i class="el-icon-user"></i>
+          <span>Credit Card</span>
         </el-menu-item>
       </el-menu>
     </el-aside>

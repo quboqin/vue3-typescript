@@ -9,7 +9,7 @@
         <el-input v-model="code"></el-input>
       </el-form-item>
       <el-form-item align="right">
-        <el-button type="primary" @click="onSubmit">Submit</el-button>
+        <el-button type="primary" @click="onSubmitOTP">Submit</el-button>
         <el-button @click="onReset">Reset</el-button>
       </el-form-item>
     </el-form>
@@ -18,21 +18,34 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { signIn, sendCustomChallengeAnswer } from '@/utils/aws-auth'
 import { userAuthInject } from '@/store/user'
 
 export default defineComponent({
   name: 'Verify Code',
   setup() {
-    const { userInfo } = userAuthInject()
+    const { userInfo, setCognitoUser } = userAuthInject()
 
-    const user = userInfo.token
+    const user = userInfo.phone
     const code = ''
 
-    function onSelect(index: number): void {
-      console.log(`onSelect: ${index}`)
-    }
-
-    function onSubmit(): void {
+    async function onSubmitOTP(): Promise<void> {
+      const cognitoUser = userInfo.cognitoUser
+      if (cognitoUser) {
+        try {
+          await sendCustomChallengeAnswer(cognitoUser, code)
+        } catch (error) {
+          if (error.code === 'UserLambdaValidationException') {
+            const _cognitoUser = await signIn(
+              cognitoUser.getUsername(),
+              true,
+              'Qubo',
+              'Qin',
+            )
+            setCognitoUser(_cognitoUser)
+          }
+        }
+      }
       console.log(`onSubmit`)
     }
 
@@ -40,7 +53,7 @@ export default defineComponent({
       console.log(`onReset`)
     }
 
-    return { user, code, onSelect, onSubmit, onReset }
+    return { user, code, onSubmitOTP, onReset }
   },
 })
 </script>

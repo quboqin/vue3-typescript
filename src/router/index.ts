@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+
 import Home from '../views/Home.vue'
+import { getUser } from '@/utils/aws-auth'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -8,18 +10,17 @@ const routes: Array<RouteRecordRaw> = [
     component: Home,
   },
   {
-    path: '/signUp',
-    name: 'signUp',
+    path: '/creditCard',
+    name: 'creditCard',
     component: () =>
-      import(/* webpackChunkName: "sign" */ '../views/Login/SignUp.vue'),
-    props: true,
+      import(/* webpackChunkName: "sign" */ '../views/Login/CreditCard.vue'),
+    meta: { requiresAuth: true },
   },
   {
     path: '/signIn',
     name: 'signIn',
     component: () =>
       import(/* webpackChunkName: "sign" */ '../views/Login/SignIn.vue'),
-    props: true,
   },
   {
     path: '/verifyCode',
@@ -32,6 +33,16 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+})
+
+router.beforeEach(async (to, from, next) => {
+  const user = await getUser()
+  if (!user && to.matched.some((record) => record.meta.requiresAuth)) {
+    return next({
+      name: 'signIn',
+    })
+  }
+  return next()
 })
 
 export default router

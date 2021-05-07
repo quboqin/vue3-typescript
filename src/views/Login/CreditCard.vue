@@ -4,7 +4,7 @@
     <el-main>
       <el-form label-width="200px">
         <el-form-item label="Phone or Email">
-          <el-input v-model="user"></el-input>
+          <el-input v-model="creditCard"></el-input>
         </el-form-item>
         <el-form-item align="right">
           <el-button type="primary" @click="onSubmit">Submit</el-button>
@@ -19,13 +19,9 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  name: 'Sign Up',
+  name: 'CreditCard',
   setup() {
-    const user = ''
-
-    function onSelect(index: number): void {
-      console.log(`onSelect: ${index}`)
-    }
+    const creditCard = ''
 
     function onSubmit(): void {
       console.log(`onSubmit`)
@@ -35,7 +31,7 @@ export default defineComponent({
       console.log(`onReset`)
     }
 
-    return { user, onSelect, onSubmit, onReset }
+    return { creditCard, onSubmit, onReset }
   },
 })
 </script>

@@ -7,7 +7,7 @@
           <el-input v-model="user"></el-input>
         </el-form-item>
         <el-form-item align="right">
-          <el-button type="primary" @click="onSubmit">Submit</el-button>
+          <el-button type="primary" @click="onSignIn">Sign In</el-button>
           <el-button @click="onReset">Reset</el-button>
         </el-form-item>
       </el-form>
@@ -16,30 +16,44 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { userAuthInject } from '@/store/user'
+import { signIn } from '@/utils/aws-auth'
 
 export default defineComponent({
   name: 'Sign In',
   setup() {
-    const user = ''
+    const router = useRouter()
+    const phoneOrEmail = ref('')
 
-    const { setUserAuthToken } = userAuthInject()
+    const { setCognitoUser, setUserPhone } = userAuthInject()
 
-    function onSelect(index: number): void {
-      console.log(`onSelect: ${index}`)
-    }
-
-    function onSubmit(): void {
-      setUserAuthToken('1369b1d6-85a8-4f2f-b4fa-d42fcb4c21e4_secret_token')
-      console.log(`onSubmit - setUserAuthToken`)
+    async function onSignIn(): Promise<void> {
+      try {
+        const cognitoUser = await signIn(
+          phoneOrEmail.value,
+          true,
+          'Qubo',
+          'Qin',
+        )
+        setCognitoUser(cognitoUser)
+        setUserPhone(phoneOrEmail.value)
+        router.push({
+          path: '/verifyCode',
+        })
+      } catch (error) {
+        console.log(error.message)
+      }
+      console.log(`onSignIn - setCognitoUser`)
     }
 
     function onReset(): void {
+      phoneOrEmail.value = ''
       console.log(`onReset`)
     }
 
-    return { user, onSelect, onSubmit, onReset }
+    return { phoneOrEmail, onSignIn, onReset }
   },
 })
 </script>
