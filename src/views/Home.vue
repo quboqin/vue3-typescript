@@ -1,20 +1,59 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
-    <div><button v-on:click="onGetUserById">Get user by id</button></div>
-    <div><button v-on:click="onGetUsers">Get users</button></div>
-  </div>
+  <el-container>
+    <el-header>
+      <HelloWorld
+        align="center"
+        msg="Welcome to Full Stack World + TypeScript App"
+      />
+    </el-header>
+    <el-main>
+      <el-row :gutter="20" justify="space-around">
+        <el-col :span="12">
+          <div align="center">Avatar</div>
+          <div align="center">
+            <el-image :src="require('@/assets/avatar.jpg')"></el-image>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div align="center">Vue</div>
+          <div align="center">
+            <el-image :src="require('@/assets/logo.png')"> </el-image>
+          </div>
+        </el-col>
+      </el-row>
+
+      <el-row :gutter="20" justify="space-around">
+        <el-col :span="12" align="center">
+          <el-button
+            :disabled="loading"
+            :loading="loading"
+            type="primary"
+            icon="el-icon-search"
+            @click="onGetUserById"
+            >Get a user by id</el-button
+          ></el-col
+        >
+        <el-col :span="12" align="center">
+          <el-button
+            :disabled="loading"
+            :loading="loading"
+            type="primary"
+            icon="el-icon-zoom-in"
+            @click="onGetUsers"
+            >Get all users</el-button
+          ></el-col
+        >
+      </el-row>
+    </el-main>
+  </el-container>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component'
-
-import { User } from 'quboqin-lib-typescript/lib/user'
-
-import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
-
+import { defineComponent, onMounted } from 'vue'
+import { useAsync } from '@/utils/async'
 import { result } from '@/utils/axios'
+import { User } from 'quboqin-lib-typescript/lib/user'
+import HelloWorld from '@/components/HelloWorld.vue'
 
 const getUserById = (params: Record<string, unknown> = {}) => {
   return result('get', '/users', params)
@@ -24,29 +63,42 @@ const checkHealth = (params: Record<string, unknown> = {}) => {
   return result('get', '/health', params)
 }
 
-@Options({
+export default defineComponent({
+  name: 'Home',
   components: {
     HelloWorld,
   },
+  setup() {
+    const user: User = {
+      userId: '4d53f6c8-528e-4c79-ac05-d296ba1a5a90',
+      phone: '+8613004151097',
+    }
+
+    async function onGetUserById(): Promise<unknown> {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return await getUserById(user as any)
+    }
+
+    async function onGetUsers(): Promise<unknown> {
+      return await getUserById()
+    }
+
+    const loading = useAsync(() => {
+      return new Promise<void>((resolve) => {
+        setTimeout(() => {
+          checkHealth()
+          resolve()
+        }, 2000)
+      })
+    })
+
+    return {
+      loading,
+      user,
+      onGetUserById,
+      onGetUsers,
+      onMounted,
+    }
+  },
 })
-export default class Home extends Vue {
-  user: User = {
-    userId: '4d53f6c8-528e-4c79-ac05-d296ba1a5a90',
-    phone: '+8613004151097',
-  }
-
-  async onGetUserById(): Promise<unknown> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return await getUserById(this.user as any)
-  }
-
-  async onGetUsers(): Promise<unknown> {
-    return await getUserById()
-  }
-
-  async mounted(): Promise<void> {
-    console.log('mounted')
-    await checkHealth()
-  }
-}
 </script>
