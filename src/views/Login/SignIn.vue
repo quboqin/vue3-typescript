@@ -25,7 +25,7 @@ export default defineComponent({
   name: 'Sign In',
   setup() {
     const router = useRouter()
-    const phoneOrEmail = ref('')
+    const phoneOrEmail = ref('+16264895188')
 
     const { setCognitoUser, setUserPhone } = userAuthInject()
 

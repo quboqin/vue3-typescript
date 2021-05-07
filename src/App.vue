@@ -30,7 +30,8 @@ import { userAuthProvide, UserInfo } from '@/store/user'
 export default defineComponent({
   setup() {
     const newUser: UserInfo = {
-      token: 'secret_token_9df91e67-9af6-4ffe-9322-a5a27a829210'
+      phone: '+16264895188',
+      token: 'secret_token_9df91e67-9af6-4ffe-9322-a5a27a829210',
     }
     userAuthProvide(newUser)
   },

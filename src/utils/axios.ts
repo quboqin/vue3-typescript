@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import { getCurrentSession, getUser } from '@/utils/aws-auth'
+
 const port = process.env.VUE_APP_PORT
 const url = process.env.VUE_APP_URL ?? process.env.VUE_APP_BASE_URL
 console.log(process.env.VUE_APP_BASE_URL)
@@ -10,7 +12,22 @@ axios.defaults.timeout = process.env.VUE_APP_TIMEOUT
 axios.defaults.headers.post['Content-Type'] =
   'application/x-www-form-urlencoded;charset=UTF-8'
 
-axios.interceptors.request.use()
+axios.interceptors.request.use(
+  async (config) => {
+    const session = await getCurrentSession()
+    if (session) {
+      config.headers.Authorization = `Bearer ${session
+        .getIdToken()
+        .getJwtToken()}`
+      const user = await getUser()
+      config.headers.userId = user.username
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  },
+)
 
 axios.interceptors.response.use()
 
