@@ -16,30 +16,30 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, inject } from 'vue'
-
-type UpdateTokenFun = (newToken: string) => void
+import { defineComponent } from 'vue'
+import { userAuthInject } from '@/store/user'
 
 export default defineComponent({
   name: 'Sign In',
   setup() {
-    const updateToken = inject('updateToken') as UpdateTokenFun
     const user = ''
+
+    const { setUserAuthToken } = userAuthInject()
 
     function onSelect(index: number): void {
       console.log(`onSelect: ${index}`)
     }
 
     function onSubmit(): void {
-      updateToken('1369b1d6-85a8-4f2f-b4fa-d42fcb4c21e4_secret_token')
-      console.log(`onSubmit`)
+      setUserAuthToken('1369b1d6-85a8-4f2f-b4fa-d42fcb4c21e4_secret_token')
+      console.log(`onSubmit - setUserAuthToken`)
     }
 
     function onReset(): void {
       console.log(`onReset`)
     }
 
-    return { updateToken, user, onSelect, onSubmit, onReset }
+    return { user, onSelect, onSubmit, onReset }
   },
 })
 </script>

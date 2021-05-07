@@ -17,14 +17,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, inject } from 'vue'
+import { defineComponent } from 'vue'
+import { userAuthInject } from '@/store/user'
 
 export default defineComponent({
   name: 'Verify Code',
   setup() {
-    const user = ''
+    const { userInfo } = userAuthInject()
 
-    const code = inject('userToken')
+    const user = userInfo.token
+    const code = ''
 
     function onSelect(index: number): void {
       console.log(`onSelect: ${index}`)

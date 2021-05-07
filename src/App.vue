@@ -25,21 +25,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, provide, ref } from 'vue'
+import { defineComponent } from 'vue'
+import { userAuthProvide, UserInfo } from '@/store/user'
 export default defineComponent({
   setup() {
-    const userToken = ref('secret_token_9df91e67-9af6-4ffe-9322-a5a27a829210')
-    const updateToken = (newToken: string) => {
-      userToken.value = newToken
+    const newUser: UserInfo = {
+      token: 'secret_token_9df91e67-9af6-4ffe-9322-a5a27a829210'
     }
-
-    provide('userToken', userToken)
-    provide('updateToken', updateToken)
-
-    return {
-      userToken,
-      updateToken,
-    }
+    userAuthProvide(newUser)
   },
 })
 </script>
