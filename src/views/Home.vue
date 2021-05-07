@@ -24,12 +24,22 @@
 
       <el-row :gutter="20" justify="space-around">
         <el-col :span="12" align="center">
-          <el-button type="primary" icon="el-icon-search" @click="onGetUserById"
+          <el-button
+            :disabled="loading"
+            :loading="loading"
+            type="primary"
+            icon="el-icon-search"
+            @click="onGetUserById"
             >Get a user by id</el-button
           ></el-col
         >
         <el-col :span="12" align="center">
-          <el-button type="primary" icon="el-icon-zoom-in" @click="onGetUsers"
+          <el-button
+            :disabled="loading"
+            :loading="loading"
+            type="primary"
+            icon="el-icon-zoom-in"
+            @click="onGetUsers"
             >Get all users</el-button
           ></el-col
         >
@@ -40,12 +50,10 @@
 
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue'
-
-import { User } from 'quboqin-lib-typescript/lib/user'
-
-import HelloWorld from '@/components/HelloWorld.vue' // @ is an alias to /src
-
+import { useAsync } from '@/utils/async'
 import { result } from '@/utils/axios'
+import { User } from 'quboqin-lib-typescript/lib/user'
+import HelloWorld from '@/components/HelloWorld.vue'
 
 const getUserById = (params: Record<string, unknown> = {}) => {
   return result('get', '/users', params)
@@ -75,11 +83,17 @@ export default defineComponent({
       return await getUserById()
     }
 
-    onMounted(async () => {
-      await checkHealth()
+    const loading = useAsync(() => {
+      return new Promise<void>((resolve) => {
+        setTimeout(() => {
+          checkHealth()
+          resolve()
+        }, 2000)
+      })
     })
 
     return {
+      loading,
       user,
       onGetUserById,
       onGetUsers,
