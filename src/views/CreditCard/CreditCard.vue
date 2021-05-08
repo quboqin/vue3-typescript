@@ -46,25 +46,32 @@
           </el-col>
         </el-row>
       </el-card>
+      <el-button type="primary" @click="onPayOrder">Pay</el-button>
     </el-main>
   </el-container>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
-import { userAuthInject } from '@/store/user'
 import { result } from '@/utils/axios'
 import { stripe, cardNumber, cardExpiry, cardCvc } from '@/utils/stripe'
 
+import { Card } from 'quboqin-lib-typescript/lib/card'
+
 const saveCard = (params: Record<string, unknown> = {}) => {
-  return result('post', '/save-card', params)
+  return result('post', '/cards', params)
+}
+
+const payOrder = (params: Record<string, unknown> = {}) => {
+  return result('post', '/orders', params)
 }
 
 export default defineComponent({
   name: 'CreditCard',
   setup() {
     const disabled = ref(false)
-    const { userInfo } = userAuthInject()
+
+    const card: Card = new Card()
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const stripeTokenHandler = async (token: any) => {
@@ -74,13 +81,9 @@ export default defineComponent({
         disabled.value = false
       } else {
         // Send the token to your server.
-        const cognitoUser = userInfo.cognitoUser
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const ret: any = await saveCard({
-          userId: cognitoUser?.getUsername(),
           stripeToken: token.id,
-          phone: cognitoUser?.getUsername(),
-          email: 'qubo.qin@gmail.com',
           sourceId: result.source?.id,
           cardInfo: {
             brand: result.source?.card?.brand,
@@ -90,6 +93,8 @@ export default defineComponent({
             last4: result.source?.card?.last4,
           },
         })
+        card.cardId = ret.cardId
+
         if (ret.code === 400) {
           console.log(ret.message)
         }
@@ -105,6 +110,13 @@ export default defineComponent({
         // Send the token to your server.
         await stripeTokenHandler(result.token)
       }
+    }
+
+    async function onPayOrder(): Promise<void> {
+      await payOrder({
+        cardId: card.cardId,
+        amount: '0.5',
+      })
     }
 
     onMounted(() => {
@@ -126,7 +138,7 @@ export default defineComponent({
       }
     })
 
-    return { disabled, onSaveCreditCard }
+    return { disabled, onSaveCreditCard, onPayOrder }
   },
 })
 </script>
