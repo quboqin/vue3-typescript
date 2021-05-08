@@ -52,6 +52,7 @@
 </template>
 
 <script lang="ts">
+import { v4 as uuidv4 } from 'uuid'
 import { defineComponent, onMounted, ref } from 'vue'
 import { result } from '@/utils/axios'
 import { stripe, cardNumber, cardExpiry, cardCvc } from '@/utils/stripe'
@@ -71,7 +72,7 @@ export default defineComponent({
   setup() {
     const disabled = ref(false)
 
-    const card: Card = new Card()
+    let card: Card = new Card()
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const stripeTokenHandler = async (token: any) => {
@@ -83,13 +84,14 @@ export default defineComponent({
         // Send the token to your server.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const ret: any = await saveCard({
+          cardId: uuidv4(),
           stripeToken: token.id,
           sourceId: result.source?.id,
           cardInfo: {
             brand: result.source?.card?.brand,
             country: result.source?.card?.country,
-            expMonth: result.source?.card?.exp_month,
-            expYear: result.source?.card?.exp_year,
+            expirationMonth: result.source?.card?.exp_month,
+            expirationYear: result.source?.card?.exp_year,
             last4: result.source?.card?.last4,
           },
         })
