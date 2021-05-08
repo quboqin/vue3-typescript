@@ -1,12 +1,12 @@
 import { provide, inject, reactive } from 'vue'
 import { CognitoUser } from 'amazon-cognito-identity-js'
 
-export interface UserInfo {
-  userId?: string
+import { User } from 'quboqin-lib-typescript/lib/user'
+
+export class UserInfo {
+  user?: User
   cognitoUser?: CognitoUser
   token?: string
-  phone?: string
-  email?: string
 }
 
 type UserInfoContext = {
@@ -14,7 +14,6 @@ type UserInfoContext = {
   setCognitoUser: (cognitoUser: CognitoUser) => void
   setUserInfo: (newUser: UserInfo) => void
   setUserAuthToken: (token: string) => void
-  setUserPhone: (phone: string) => void
 }
 
 const UserAuthSymbol = Symbol()
@@ -31,14 +30,11 @@ export const userAuthProvide: (newUser: UserInfo) => void = (newUser) => {
 
   const setUserAuthToken = (token: string) => (userInfo.token = token)
 
-  const setUserPhone = (phone: string) => (userInfo.phone = phone)
-
   provide(UserAuthSymbol, {
     userInfo,
     setCognitoUser,
     setUserInfo,
     setUserAuthToken,
-    setUserPhone,
   })
 }
 

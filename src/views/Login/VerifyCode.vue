@@ -26,7 +26,7 @@ export default defineComponent({
   setup() {
     const { userInfo, setCognitoUser } = userAuthInject()
 
-    const user = userInfo.phone
+    const user = userInfo.user?.phone
     const code = ref('')
 
     async function onSubmitOTP(): Promise<void> {

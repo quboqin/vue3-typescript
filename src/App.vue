@@ -30,7 +30,9 @@ import { userAuthProvide, UserInfo } from '@/store/user'
 export default defineComponent({
   setup() {
     const newUser: UserInfo = {
-      phone: '+16264895188',
+      user: {
+        phone: '+16264895188',
+      },
       token: 'secret_token_9df91e67-9af6-4ffe-9322-a5a27a829210',
     }
     userAuthProvide(newUser)
@@ -39,11 +41,12 @@ export default defineComponent({
 </script>
 
 <style lang="stylus">
-#app
-  font-family Avenir, Helvetica, Arial, sans-serif
-  -webkit-font-smoothing antialiased
-  -moz-osx-font-smoothing grayscale
-  text-align left
-  color #2c3e50
-  margin-top 60px
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: left;
+  color: #2c3e50;
+  margin-top: 60px;
+}
 </style>

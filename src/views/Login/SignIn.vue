@@ -18,7 +18,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { userAuthInject } from '@/store/user'
+import { UserInfo, userAuthInject } from '@/store/user'
 import { signIn } from '@/utils/aws-auth'
 
 export default defineComponent({
@@ -27,7 +27,7 @@ export default defineComponent({
     const router = useRouter()
     const phoneOrEmail = ref('+16264895188')
 
-    const { setCognitoUser, setUserPhone } = userAuthInject()
+    const { setUserInfo } = userAuthInject()
 
     async function onSignIn(): Promise<void> {
       try {
@@ -37,8 +37,15 @@ export default defineComponent({
           'Qubo',
           'Qin',
         )
-        setCognitoUser(cognitoUser)
-        setUserPhone(phoneOrEmail.value)
+
+        const userInfo: UserInfo = {
+          cognitoUser: cognitoUser,
+          user: {
+            phone: phoneOrEmail.value,
+          },
+        }
+
+        setUserInfo(userInfo)
         router.push({
           path: '/verifyCode',
         })
