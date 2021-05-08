@@ -13,7 +13,9 @@ const routes: Array<RouteRecordRaw> = [
     path: '/creditCard',
     name: 'creditCard',
     component: () =>
-      import(/* webpackChunkName: "sign" */ '../views/Login/CreditCard.vue'),
+      import(
+        /* webpackChunkName: "sign" */ '../views/CreditCard/CreditCard.vue'
+      ),
     meta: { requiresAuth: true },
   },
   {
