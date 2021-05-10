@@ -1,54 +1,46 @@
 <template>
-  <el-container>
-    <el-header align="center">Credit Card</el-header>
-    <el-main>
-      <el-card class="box-card">
-        <template #header>
-          <div class="card-header">
-            <span>Credit Card</span>
-            <el-button
-              type="primary"
-              @click="onSaveCreditCard"
-              :disabled="disabled"
-              >Save</el-button
-            >
-          </div>
-        </template>
-        <el-row>
-          <el-col :span="24">
-            <div>
-              <div>Card Number</div>
-              <div id="card-number"></div>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <div>
-              <div>Expiration Date</div>
-              <div id="card-expiry"></div>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <div>
-              <div>CVV</div>
-              <div id="card-cvc"></div>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24">
-            <div>
-              <div id="card-errors" role="alert"></div>
-            </div>
-          </el-col>
-        </el-row>
-      </el-card>
-      <el-button type="primary" @click="onPayOrder">Pay</el-button>
-    </el-main>
-  </el-container>
+  <el-card class="box-card">
+    <template #header>
+      <div class="card-header">
+        <span>Credit Card</span>
+        <el-button type="primary" @click="onSaveCreditCard" :disabled="disabled"
+          >Save</el-button
+        >
+      </div>
+    </template>
+    <el-row>
+      <el-col :span="24">
+        <div>
+          <div>Card Number</div>
+          <div id="card-number"></div>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="24">
+        <div>
+          <div>Expiration Date</div>
+          <div id="card-expiry"></div>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="24">
+        <div>
+          <div>CVV</div>
+          <div id="card-cvc"></div>
+        </div>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-col :span="24">
+        <div>
+          <div id="card-errors" role="alert"></div>
+        </div>
+      </el-col>
+    </el-row>
+  </el-card>
+  <el-button type="primary" @click="onPayOrder">Pay</el-button>
 </template>
 
 <script lang="ts">
@@ -68,7 +60,7 @@ const payOrder = (params: Record<string, unknown> = {}) => {
 }
 
 export default defineComponent({
-  name: 'CreditCard',
+  name: 'AddCreditCard',
   setup() {
     const disabled = ref(false)
 

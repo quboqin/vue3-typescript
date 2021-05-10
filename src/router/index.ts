@@ -10,12 +10,28 @@ const routes: Array<RouteRecordRaw> = [
     component: Home,
   },
   {
-    path: '/creditCard',
-    name: 'creditCard',
+    path: '/addCreditCard',
+    name: 'addCreditCard',
     component: () =>
       import(
-        /* webpackChunkName: "sign" */ '../views/CreditCard/CreditCard.vue'
+        /* webpackChunkName: "sign" */ '../views/CreditCard/AddCreditCard.vue'
       ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/creditCardList',
+    name: 'creditCardList',
+    component: () =>
+      import(
+        /* webpackChunkName: "sign" */ '../views/CreditCard/CreditCardList.vue'
+      ),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/donate',
+    name: 'donate',
+    component: () =>
+      import(/* webpackChunkName: "sign" */ '../views/CreditCard/Donate.vue'),
     meta: { requiresAuth: true },
   },
   {

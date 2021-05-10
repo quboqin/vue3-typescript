@@ -1,18 +1,13 @@
 <template>
-  <el-container>
-    <el-header align="center">Sign In</el-header>
-    <el-main>
-      <el-form label-width="200px">
-        <el-form-item label="Phone or Email">
-          <el-input v-model="phoneOrEmail"></el-input>
-        </el-form-item>
-        <el-form-item align="right">
-          <el-button type="primary" @click="onSignIn">Sign In</el-button>
-          <el-button @click="onReset">Reset</el-button>
-        </el-form-item>
-      </el-form>
-    </el-main>
-  </el-container>
+  <el-form label-width="200px">
+    <el-form-item label="Phone or Email">
+      <el-input v-model="phoneOrEmail"></el-input>
+    </el-form-item>
+    <el-form-item align="right">
+      <el-button type="primary" @click="onSignIn">Sign In</el-button>
+      <el-button @click="onReset">Reset</el-button>
+    </el-form-item>
+  </el-form>
 </template>
 
 <script lang="ts">
