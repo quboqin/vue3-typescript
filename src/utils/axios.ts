@@ -105,6 +105,8 @@ export function request(
   }
 }
 
+export type AxioFunc = (params: Record<string, unknown>) => Promise<unknown>
+
 export function result(
   method: string,
   path: string,

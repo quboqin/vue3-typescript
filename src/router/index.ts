@@ -10,29 +10,22 @@ const routes: Array<RouteRecordRaw> = [
     component: Home,
   },
   {
-    path: '/addCreditCard',
-    name: 'addCreditCard',
-    component: () =>
-      import(
-        /* webpackChunkName: "sign" */ '../views/CreditCard/AddCreditCard.vue'
-      ),
-    meta: { requiresAuth: true },
-  },
-  {
     path: '/creditCardList',
     name: 'creditCardList',
     component: () =>
       import(
         /* webpackChunkName: "sign" */ '../views/CreditCard/CreditCardList.vue'
       ),
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: false },
   },
   {
-    path: '/donate',
-    name: 'donate',
+    path: '/addCreditCard',
+    name: 'addCreditCardList',
     component: () =>
-      import(/* webpackChunkName: "sign" */ '../views/CreditCard/Donate.vue'),
-    meta: { requiresAuth: true },
+      import(
+        /* webpackChunkName: "sign" */ '../views/CreditCard/AddCreditCard.vue'
+      ),
+    meta: { requiresAuth: false },
   },
   {
     path: '/signIn',

@@ -1,58 +1,71 @@
 <template>
   <el-container>
     <el-header style="text-align: right; font-size: 12px">
-      <el-dropdown>
+      <el-dropdown @command="onSelectMenuItem">
         <i class="el-icon-setting" style="margin-right: 15px"></i>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item @click="onSelectMenuItem(0)"
-              >Sign In</el-dropdown-item
-            >
-            <el-dropdown-item @click="onSelectMenuItem(1)"
+            <el-dropdown-item command="/">Home</el-dropdown-item>
+            <el-dropdown-item command="/signIn">Sign In</el-dropdown-item>
+            <el-dropdown-item command="/addCreditCard"
               >Add Credit Card</el-dropdown-item
             >
-            <el-dropdown-item @click="onSelectMenuItem(2)"
+            <el-dropdown-item command="/creditCardList"
               >Credit Card List</el-dropdown-item
-            >
-            <el-dropdown-item @click="onSelectMenuItem(3)"
-              >Donate</el-dropdown-item
             >
           </el-dropdown-menu>
         </template>
       </el-dropdown>
-      <span>Qubo Qin</span>
+      <span v-show="!loading">{{ userName }}</span>
     </el-header>
     <el-main><router-view /></el-main>
   </el-container>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
+import { useAsync } from '@/utils/async'
 import { userAuthProvide, UserInfo } from '@/store/user'
+import { checkHealth } from '@/apis/health'
+
 export default defineComponent({
   setup() {
     const router = useRouter()
-    const pages = ['/signIn', '/addCreditCard', '/creditCardList', '/donate']
 
     const newUser: UserInfo = {
       user: {
         phone: '+16264895188',
       },
-      token: 'secret_token_9df91e67-9af6-4ffe-9322-a5a27a829210',
     }
 
     userAuthProvide(newUser)
 
-    function onSelectMenuItem(index: number) {
-      console.log(`onSelectMenuItem = ${index}`)
+    const userName = computed(() =>
+      newUser.user?.firstName
+        ? `${newUser.user?.firstName} ${newUser.user?.lastName}`
+        : newUser.user?.phone
+        ? newUser.user?.phone
+        : newUser.user?.email,
+    )
+
+    function onSelectMenuItem(command: unknown) {
       router.push({
-        path: pages[index],
+        path: command as string,
       })
     }
 
-    return { onSelectMenuItem }
+    const loading = useAsync(() => {
+      return new Promise<void>((resolve) => {
+        setTimeout(() => {
+          checkHealth({})
+          resolve()
+        }, 2000)
+      })
+    })
+
+    return { onSelectMenuItem, userName, loading }
   },
 })
 </script>

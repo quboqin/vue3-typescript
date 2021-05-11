@@ -1,87 +1,236 @@
 <template>
+  <el-button @click="dialogVisible = true">增加一个任务</el-button>
+  <el-button @click="onToggleSelection(table)">全选</el-button>
+  <el-button @click="onToggleSelection()">清除</el-button>
+  <el-button @click="onDelete()">删除</el-button>
   <el-table
     ref="multipleTable"
     :data="table"
     tooltip-effect="dark"
     style="width: 100%"
-    @selection-change="handleSelectionChange"
+    height="400"
+    @selection-change="onSelectionChange"
   >
-    <el-table-column type="selection" width="55"> </el-table-column>
-    <el-table-column label="日期" width="120">
-      <template #default="scope">{{ scope.row.date }}</template>
+    <el-table-column fixed type="selection" width="55"> </el-table-column>
+    <el-table-column fixed prop="title" label="Title" width="180">
     </el-table-column>
-    <el-table-column prop="name" label="姓名" width="120"> </el-table-column>
-    <el-table-column prop="address" label="地址" show-overflow-tooltip>
+    <el-table-column label="Due" width="120">
+      <template #default="scope">
+        <i class="el-icon-time"></i>
+        <span style="margin-left: 10px">{{ scope.row.due }}</span></template
+      >
+    </el-table-column>
+    <el-table-column prop="status" label="Status" width="150">
+      <template #default="scope">
+        <el-tag
+          :type="
+            scope.row.status === TASK_STATUS.IN_PROGRESS ? 'primary' : 'success'
+          "
+          disable-transitions
+          >{{ scope.row.status }}</el-tag
+        >
+      </template>
+    </el-table-column>
+    <el-table-column prop="priority" label="Priority" width="120">
+      <template #default="scope">
+        <el-tag
+          :type="
+            scope.row.priority === TASK_PRIORITY.HIGH ? 'primary' : 'success'
+          "
+          disable-transitions
+          >{{ scope.row.priority }}</el-tag
+        >
+      </template>
+    </el-table-column>
+    <el-table-column prop="owner" label="Owner" width="100"> </el-table-column>
+    <el-table-column prop="description" label="Detail" show-overflow-tooltip>
+    </el-table-column>
+    <el-table-column label="操作">
+      <template #default="scope">
+        <el-button size="mini" @click="onEdit(scope.$index, scope.row)"
+          >编辑</el-button
+        >
+        <el-button
+          size="mini"
+          type="danger"
+          @click="onDelete(scope.$index, scope.row)"
+          >删除</el-button
+        >
+      </template>
     </el-table-column>
   </el-table>
-  <div style="margin-top: 20px">
-    <el-button @click="toggleSelection([table[1], table[2]])"
-      >切换第二、第三行的选中状态</el-button
-    >
-    <el-button @click="toggleSelection()">取消选择</el-button>
-  </div>
+  <el-dialog
+    title="提示"
+    v-model="dialogVisible"
+    width="30%"
+    :before-close="handleClose"
+  >
+    <el-form ref="form" :model="form" label-width="80px">
+      <el-form-item label="任务名称">
+        <el-input v-model="form.title"></el-input>
+      </el-form-item>
+      <el-form-item label="负责人">
+        <el-input v-model="form.owner"></el-input>
+      </el-form-item>
+      <el-form-item label="任务状态">
+        <el-select v-model="form.status" placeholder="请选择任务状态">
+          <el-option
+            :label="TASK_STATUS.IN_PROGRESS"
+            :value="TASK_STATUS.IN_PROGRESS"
+          ></el-option>
+          <el-option
+            :label="TASK_STATUS.DONE"
+            :value="TASK_STATUS.DONE"
+          ></el-option>
+          <el-option
+            :label="TASK_STATUS.WAITING"
+            :value="TASK_STATUS.WAITING"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="任务优先级">
+        <el-select v-model="form.priority" placeholder="请选择任务优先级">
+          <el-option
+            :label="TASK_PRIORITY.HIGH"
+            :value="TASK_PRIORITY.HIGH"
+          ></el-option>
+          <el-option
+            :label="TASK_PRIORITY.MED"
+            :value="TASK_PRIORITY.MED"
+          ></el-option>
+          <el-option
+            :label="TASK_PRIORITY.LOW"
+            :value="TASK_PRIORITY.LOW"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="完成时间">
+        <el-col :span="11">
+          <el-date-picker
+            type="date"
+            placeholder="选择日期"
+            v-model="form.due"
+            style="width: 100%"
+          ></el-date-picker>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="任务描述">
+        <el-input type="textarea" v-model="form.description"></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogVisible = false"
+          >创 建</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, reactive } from 'vue'
-import { useAsync } from '@/utils/async'
-import { result } from '@/utils/axios'
-import { User } from 'quboqin-lib-typescript/lib/user'
+import { defineComponent, ref, reactive } from 'vue'
 
-const getUserById = (params: Record<string, unknown> = {}) => {
-  return result('get', '/users', params)
+enum TASK_PRIORITY {
+  HIGH = 'HIGH',
+  LOW = 'LOW',
+  MED = 'MED',
 }
 
-const checkHealth = (params: Record<string, unknown> = {}) => {
-  return result('get', '/health', params)
+enum TASK_STATUS {
+  IN_PROGRESS = 'IN_PROGRESS',
+  DONE = 'DONE',
+  WAITING = 'WAITING',
+}
+
+class Task {
+  due?: string
+  title?: string
+  status?: TASK_STATUS
+  priority?: TASK_PRIORITY
+  description?: string
+  owner?: string
 }
 
 export default defineComponent({
   name: 'Home',
   setup() {
+    const dialogVisible = ref(false)
     const multipleTable = ref()
 
-    const table = [
+    const form = reactive(new Task())
+
+    const table: Task[] = [
       {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
+        due: '2021-05-03',
+        title: 'First Draft of new content',
+        status: TASK_STATUS.IN_PROGRESS,
+        priority: TASK_PRIORITY.HIGH,
+        description: '',
+        owner: '王小虎',
       },
       {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
+        due: '2021-05-04',
+        title: 'First Draft of new content',
+        status: TASK_STATUS.IN_PROGRESS,
+        priority: TASK_PRIORITY.HIGH,
+        description: '',
+        owner: '王小虎',
       },
       {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
+        due: '2021-05-03',
+        title: 'First Draft of new content',
+        status: TASK_STATUS.IN_PROGRESS,
+        priority: TASK_PRIORITY.HIGH,
+        description: '',
+        owner: '王小虎',
       },
       {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
+        due: '2021-05-04',
+        title: 'First Draft of new content',
+        status: TASK_STATUS.IN_PROGRESS,
+        priority: TASK_PRIORITY.HIGH,
+        description: '',
+        owner: '王小虎',
       },
       {
-        date: '2016-05-08',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
+        due: '2021-05-03',
+        title: 'First Draft of new content',
+        status: TASK_STATUS.IN_PROGRESS,
+        priority: TASK_PRIORITY.HIGH,
+        description: '',
+        owner: '王小虎',
       },
       {
-        date: '2016-05-06',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
+        due: '2021-05-04',
+        title: 'First Draft of new content',
+        status: TASK_STATUS.IN_PROGRESS,
+        priority: TASK_PRIORITY.HIGH,
+        description: '',
+        owner: '王小虎',
       },
       {
-        date: '2016-05-07',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
+        due: '2021-05-03',
+        title: 'First Draft of new content',
+        status: TASK_STATUS.IN_PROGRESS,
+        priority: TASK_PRIORITY.HIGH,
+        description: '',
+        owner: '王小虎',
+      },
+      {
+        due: '2021-05-04',
+        title: 'First Draft of new content',
+        status: TASK_STATUS.IN_PROGRESS,
+        priority: TASK_PRIORITY.HIGH,
+        description: '',
+        owner: '王小虎',
       },
     ]
 
     const multipleSelection: number[] = reactive([])
 
-    function toggleSelection(rows: unknown[]) {
+    function onToggleSelection(rows: unknown[]) {
       if (rows) {
         rows.forEach((row) => {
           multipleTable.value.toggleRowSelection(row)
@@ -91,44 +240,31 @@ export default defineComponent({
       }
     }
 
-    function handleSelectionChange(val: () => IterableIterator<number>) {
+    function onSelectionChange(val: () => IterableIterator<number>) {
       multipleSelection.values = val
     }
 
-    const user: User = {
-      userId: '4d53f6c8-528e-4c79-ac05-d296ba1a5a90',
-      phone: '+8613004151097',
+    function onDelete(index: number, row: unknown) {
+      console.log(`delete item ${row} at ${index}`)
     }
 
-    async function onGetUserById(): Promise<unknown> {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return await getUserById(user as any)
+    function onEdit(index: number, row: unknown) {
+      console.log(`edit item ${row} at ${index}`)
+      dialogVisible.value = true
     }
-
-    async function onGetUsers(): Promise<unknown> {
-      return await getUserById()
-    }
-
-    const loading = useAsync(() => {
-      return new Promise<void>((resolve) => {
-        setTimeout(() => {
-          checkHealth()
-          resolve()
-        }, 2000)
-      })
-    })
 
     return {
-      loading,
+      TASK_PRIORITY,
+      TASK_STATUS,
+      dialogVisible,
+      form,
       table,
       multipleTable,
       multipleSelection,
-      toggleSelection,
-      handleSelectionChange,
-      user,
-      onGetUserById,
-      onGetUsers,
-      onMounted,
+      onToggleSelection,
+      onSelectionChange,
+      onDelete,
+      onEdit,
     }
   },
 })

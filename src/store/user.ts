@@ -6,14 +6,12 @@ import { User } from 'quboqin-lib-typescript/lib/user'
 export class UserInfo {
   user?: User
   cognitoUser?: CognitoUser
-  token?: string
 }
 
 type UserInfoContext = {
   userInfo: UserInfo
   setCognitoUser: (cognitoUser: CognitoUser) => void
   setUserInfo: (newUser: UserInfo) => void
-  setUserAuthToken: (token: string) => void
 }
 
 const UserAuthSymbol = Symbol()
@@ -28,13 +26,10 @@ export const userAuthProvide: (newUser: UserInfo) => void = (newUser) => {
     Object.assign(userInfo, newUser)
   }
 
-  const setUserAuthToken = (token: string) => (userInfo.token = token)
-
   provide(UserAuthSymbol, {
     userInfo,
     setCognitoUser,
     setUserInfo,
-    setUserAuthToken,
   })
 }
 

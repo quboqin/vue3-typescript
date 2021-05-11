@@ -1,70 +1,40 @@
 <template>
-  <el-card class="box-card">
-    <template #header>
-      <div class="card-header">
-        <span>Credit Card</span>
-        <el-button type="primary" @click="onSaveCreditCard" :disabled="disabled"
-          >Save</el-button
-        >
-      </div>
-    </template>
-    <el-row>
-      <el-col :span="24">
-        <div>
-          <div>Card Number</div>
-          <div id="card-number"></div>
-        </div>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="24">
-        <div>
-          <div>Expiration Date</div>
-          <div id="card-expiry"></div>
-        </div>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="24">
-        <div>
-          <div>CVV</div>
-          <div id="card-cvc"></div>
-        </div>
-      </el-col>
-    </el-row>
-    <el-row>
-      <el-col :span="24">
-        <div>
-          <div id="card-errors" role="alert"></div>
-        </div>
-      </el-col>
-    </el-row>
-  </el-card>
-  <el-button type="primary" @click="onPayOrder">Pay</el-button>
+  <el-form ref="form" :model="form" label-width="200px">
+    <el-form-item style="vertical-align: middle" label="Card Number">
+      <div id="card-number"></div>
+    </el-form-item>
+    <el-form-item label="Expiration Date">
+      <div id="card-expiry"></div>
+    </el-form-item>
+    <el-form-item label="CVV">
+      <div id="card-cvc"></div>
+    </el-form-item>
+    <el-form-item :v-show="false">
+      <div id="card-errors" role="alert"></div>
+    </el-form-item>
+    <el-form-item>
+      <el-button type="primary" @click="onSaveCreditCard"
+        >保 存</el-button
+      ></el-form-item
+    >
+  </el-form>
 </template>
 
 <script lang="ts">
 import { v4 as uuidv4 } from 'uuid'
 import { defineComponent, onMounted, ref } from 'vue'
-import { result } from '@/utils/axios'
 import { stripe, cardNumber, cardExpiry, cardCvc } from '@/utils/stripe'
 
+import { saveCard } from '@/apis/credit'
 import { Card } from 'quboqin-lib-typescript/lib/card'
 
-const saveCard = (params: Record<string, unknown> = {}) => {
-  return result('post', '/cards', params)
-}
-
-const payOrder = (params: Record<string, unknown> = {}) => {
-  return result('post', '/orders', params)
-}
-
 export default defineComponent({
-  name: 'AddCreditCard',
-  setup() {
-    const disabled = ref(false)
+  name: 'CreditCard',
 
+  setup() {
     let card: Card = new Card()
+
+    const disabled = ref(false)
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const stripeTokenHandler = async (token: any) => {
@@ -106,13 +76,6 @@ export default defineComponent({
       }
     }
 
-    async function onPayOrder(): Promise<void> {
-      await payOrder({
-        cardId: card.cardId,
-        amount: '0.5',
-      })
-    }
-
     onMounted(() => {
       cardNumber.mount('#card-number')
       cardExpiry.mount('#card-expiry')
@@ -132,27 +95,7 @@ export default defineComponent({
       }
     })
 
-    return { disabled, onSaveCreditCard, onPayOrder }
+    return { onSaveCreditCard }
   },
 })
 </script>
-
-<style>
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.text {
-  font-size: 14px;
-}
-
-.item {
-  margin-bottom: 18px;
-}
-
-.box-card {
-  width: 480px;
-}
-</style>

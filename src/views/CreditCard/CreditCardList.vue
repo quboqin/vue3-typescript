@@ -1,66 +1,145 @@
 <template>
+  <el-button @click="onToggleSelection(table)">全选</el-button>
+  <el-button @click="onToggleSelection()">清除</el-button>
+  <el-button @click="onDelete()">删除</el-button>
   <el-table
     ref="multipleTable"
     :data="table"
     tooltip-effect="dark"
     style="width: 100%"
-    @selection-change="handleSelectionChange"
+    height="400"
+    @selection-change="onSelectionChange"
   >
-    <el-table-column type="selection" width="55"> </el-table-column>
-    <el-table-column label="日期" width="120">
-      <template #default="scope">{{ scope.row.date }}</template>
+    <el-table-column fixed type="selection" width="55"> </el-table-column>
+    <el-table-column fixed prop="brand" label="Brand" width="180">
     </el-table-column>
-    <el-table-column prop="name" label="姓名" width="120"> </el-table-column>
-    <el-table-column prop="address" label="地址" show-overflow-tooltip>
+    <el-table-column label="Month" width="120">
+      <template #default="scope">
+        <span style="margin-left: 10px">{{
+          scope.row.expirationMonth
+        }}</span></template
+      >
+    </el-table-column>
+    <el-table-column label="Year" width="120">
+      <template #default="scope">
+        <span style="margin-left: 10px">{{
+          scope.row.expirationYear
+        }}</span></template
+      >
+    </el-table-column>
+    <el-table-column prop="last4" label="Last4" width="100"> </el-table-column>
+    <el-table-column label="操作">
+      <template #default="scope">
+        <el-button
+          size="mini"
+          type="danger"
+          @click="onDelete(scope.$index, scope.row)"
+          >删除</el-button
+        >
+        <el-button
+          size="mini"
+          type="danger"
+          @click="onDonate(scope.$index, scope.row)"
+          >Donate</el-button
+        >
+      </template>
     </el-table-column>
   </el-table>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, reactive } from 'vue'
+import { defineComponent, ref, reactive } from 'vue'
+
+import { payOrder } from '@/apis/payment'
+
+class MyCard {
+  brand?: string
+  country?: string
+  expirationMonth?: number
+  expirationYear?: number
+  last4?: string
+}
 
 export default defineComponent({
   name: 'CreditCardList',
+
   setup() {
-    const table = [
+    const table: MyCard[] = [
       {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
+        brand: 'Visa',
+        country: 'CN',
+        expirationMonth: 1,
+        expirationYear: 22,
+        last4: '1234',
       },
       {
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
+        brand: 'Visa',
+        country: 'CN',
+        expirationMonth: 1,
+        expirationYear: 22,
+        last4: '1234',
       },
       {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
+        brand: 'Visa',
+        country: 'CN',
+        expirationMonth: 1,
+        expirationYear: 22,
+        last4: '1234',
       },
       {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
+        brand: 'Visa',
+        country: 'CN',
+        expirationMonth: 1,
+        expirationYear: 22,
+        last4: '1234',
       },
       {
-        date: '2016-05-08',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
-      },
-      {
-        date: '2016-05-06',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
-      },
-      {
-        date: '2016-05-07',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
+        brand: 'Visa',
+        country: 'CN',
+        expirationMonth: 1,
+        expirationYear: 22,
+        last4: '1234',
       },
     ]
 
-    return { table }
+    const multipleTable = ref()
+    const multipleSelection: number[] = reactive([])
+
+    function onToggleSelection(rows: unknown[]) {
+      if (rows) {
+        rows.forEach((row) => {
+          multipleTable.value.toggleRowSelection(row)
+        })
+      } else {
+        multipleTable.value.clearSelection()
+      }
+    }
+
+    function onSelectionChange(val: () => IterableIterator<number>) {
+      multipleSelection.values = val
+    }
+
+    function onDelete(index: number, row: unknown) {
+      console.log(`delete item  ${row} ar ${index}`)
+    }
+
+    function onDonate(index: number, row: unknown) {
+      console.log(`donate ${row} ar ${index}`)
+      payOrder({
+        cardId: 'card.cardId',
+        amount: '0.5',
+      })
+    }
+
+    return {
+      table,
+      multipleTable,
+      multipleSelection,
+      onToggleSelection,
+      onSelectionChange,
+      onDelete,
+      onDonate,
+    }
   },
 })
 </script>
