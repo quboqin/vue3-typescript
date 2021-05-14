@@ -21,17 +21,19 @@
 </template>
 
 <script lang="ts">
-import { v4 as uuidv4 } from 'uuid'
 import { defineComponent, onMounted, ref } from 'vue'
 import { stripe, cardNumber, cardExpiry, cardCvc } from '@/utils/stripe'
 
 import { saveCard } from '@/apis/credit'
 import { Card } from 'quboqin-lib-typescript/lib/card'
+import { userAuthInject } from '@/store/user'
 
 export default defineComponent({
   name: 'CreditCard',
 
   setup() {
+    const { userInfo } = userAuthInject()
+
     let card: Card = new Card()
 
     const disabled = ref(false)
@@ -46,9 +48,8 @@ export default defineComponent({
         // Send the token to your server.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const ret: any = await saveCard({
-          cardId: uuidv4(),
           stripeToken: token.id,
-          sourceId: result.source?.id,
+          phone: userInfo.user?.phone,
           cardInfo: {
             brand: result.source?.card?.brand,
             country: result.source?.card?.country,
@@ -57,7 +58,7 @@ export default defineComponent({
             last4: result.source?.card?.last4,
           },
         })
-        card.cardId = ret.cardId
+        card.id = ret.id
 
         if (ret.code === 400) {
           console.log(ret.message)
@@ -83,9 +84,8 @@ export default defineComponent({
     })
 
     cardNumber.addEventListener('change', (error: Error) => {
-      const displayError: HTMLElement | null = document.getElementById(
-        'card-errors',
-      )
+      const displayError: HTMLElement | null =
+        document.getElementById('card-errors')
       if (displayError) {
         if (error) {
           displayError.textContent = error.message

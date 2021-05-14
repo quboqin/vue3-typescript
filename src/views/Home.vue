@@ -130,103 +130,32 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue'
+import { defineComponent, ref, reactive, onMounted } from 'vue'
 
-enum TASK_PRIORITY {
-  HIGH = 'HIGH',
-  LOW = 'LOW',
-  MED = 'MED',
-}
-
-enum TASK_STATUS {
-  IN_PROGRESS = 'IN_PROGRESS',
-  DONE = 'DONE',
-  WAITING = 'WAITING',
-}
-
-class Task {
-  due?: string
-  title?: string
-  status?: TASK_STATUS
-  priority?: TASK_PRIORITY
-  description?: string
-  owner?: string
-}
+import { getAllTasks } from '@/apis/task'
+import { userAuthInject } from '@/store/user'
+import {
+  Task,
+  TASK_STATUS,
+  TASK_PRIORITY,
+} from 'quboqin-lib-typescript/lib/task'
 
 export default defineComponent({
   name: 'Home',
   setup() {
+    const { userInfo } = userAuthInject()
+    const userPhone = userInfo.user?.phone
+
     const dialogVisible = ref(false)
     const multipleTable = ref()
 
     const form = reactive(new Task())
 
-    const table: Task[] = [
-      {
-        due: '2021-05-03',
-        title: 'First Draft of new content',
-        status: TASK_STATUS.IN_PROGRESS,
-        priority: TASK_PRIORITY.HIGH,
-        description: '',
-        owner: '王小虎',
-      },
-      {
-        due: '2021-05-04',
-        title: 'First Draft of new content',
-        status: TASK_STATUS.IN_PROGRESS,
-        priority: TASK_PRIORITY.HIGH,
-        description: '',
-        owner: '王小虎',
-      },
-      {
-        due: '2021-05-03',
-        title: 'First Draft of new content',
-        status: TASK_STATUS.IN_PROGRESS,
-        priority: TASK_PRIORITY.HIGH,
-        description: '',
-        owner: '王小虎',
-      },
-      {
-        due: '2021-05-04',
-        title: 'First Draft of new content',
-        status: TASK_STATUS.IN_PROGRESS,
-        priority: TASK_PRIORITY.HIGH,
-        description: '',
-        owner: '王小虎',
-      },
-      {
-        due: '2021-05-03',
-        title: 'First Draft of new content',
-        status: TASK_STATUS.IN_PROGRESS,
-        priority: TASK_PRIORITY.HIGH,
-        description: '',
-        owner: '王小虎',
-      },
-      {
-        due: '2021-05-04',
-        title: 'First Draft of new content',
-        status: TASK_STATUS.IN_PROGRESS,
-        priority: TASK_PRIORITY.HIGH,
-        description: '',
-        owner: '王小虎',
-      },
-      {
-        due: '2021-05-03',
-        title: 'First Draft of new content',
-        status: TASK_STATUS.IN_PROGRESS,
-        priority: TASK_PRIORITY.HIGH,
-        description: '',
-        owner: '王小虎',
-      },
-      {
-        due: '2021-05-04',
-        title: 'First Draft of new content',
-        status: TASK_STATUS.IN_PROGRESS,
-        priority: TASK_PRIORITY.HIGH,
-        description: '',
-        owner: '王小虎',
-      },
-    ]
+    let table: Task[] = reactive([])
+
+    const getTasks = async () => {
+      table = (await getAllTasks({ phone: userPhone })) as Task[]
+    }
 
     const multipleSelection: number[] = reactive([])
 
@@ -253,10 +182,13 @@ export default defineComponent({
       dialogVisible.value = true
     }
 
+    onMounted(getTasks)
+
     return {
       TASK_PRIORITY,
       TASK_STATUS,
       dialogVisible,
+      getTasks,
       form,
       table,
       multipleTable,

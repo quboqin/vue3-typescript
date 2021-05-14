@@ -48,62 +48,28 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue'
+import { defineComponent, ref, reactive, onMounted } from 'vue'
 
+import { getAllCards } from '@/apis/credit'
+import { userAuthInject } from '@/store/user'
 import { payOrder } from '@/apis/payment'
-
-class MyCard {
-  brand?: string
-  country?: string
-  expirationMonth?: number
-  expirationYear?: number
-  last4?: string
-}
+import { Card } from 'quboqin-lib-typescript/lib/card'
 
 export default defineComponent({
   name: 'CreditCardList',
 
   setup() {
-    const table: MyCard[] = [
-      {
-        brand: 'Visa',
-        country: 'CN',
-        expirationMonth: 1,
-        expirationYear: 22,
-        last4: '1234',
-      },
-      {
-        brand: 'Visa',
-        country: 'CN',
-        expirationMonth: 1,
-        expirationYear: 22,
-        last4: '1234',
-      },
-      {
-        brand: 'Visa',
-        country: 'CN',
-        expirationMonth: 1,
-        expirationYear: 22,
-        last4: '1234',
-      },
-      {
-        brand: 'Visa',
-        country: 'CN',
-        expirationMonth: 1,
-        expirationYear: 22,
-        last4: '1234',
-      },
-      {
-        brand: 'Visa',
-        country: 'CN',
-        expirationMonth: 1,
-        expirationYear: 22,
-        last4: '1234',
-      },
-    ]
+    const { userInfo } = userAuthInject()
+    const userPhone = userInfo.user?.phone
+
+    let table: Card[] = reactive([])
 
     const multipleTable = ref()
     const multipleSelection: number[] = reactive([])
+
+    const getCards = async () => {
+      table = (await getAllCards({ phone: userPhone })) as Card[]
+    }
 
     function onToggleSelection(rows: unknown[]) {
       if (rows) {
@@ -128,11 +94,15 @@ export default defineComponent({
       payOrder({
         cardId: 'card.cardId',
         amount: '0.5',
+        phone: userPhone,
       })
     }
 
+    onMounted(getCards)
+
     return {
       table,
+      getCards,
       multipleTable,
       multipleSelection,
       onToggleSelection,

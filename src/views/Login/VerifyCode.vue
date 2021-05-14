@@ -3,7 +3,7 @@
   <el-main>
     <el-form label-width="200px">
       <el-form-item label="Phone or Email">
-        <el-input v-model="user"></el-input>
+        <el-input v-model="userPhone"></el-input>
       </el-form-item>
       <el-form-item label="Code">
         <el-input v-model="code"></el-input>
@@ -18,15 +18,20 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+
 import { signIn, sendCustomChallengeAnswer } from '@/utils/aws-auth'
 import { userAuthInject } from '@/store/user'
+import { createUser } from '@/apis/user'
+import { useRouter } from 'vue-router'
+import { User } from 'quboqin-lib-typescript/lib/user'
 
 export default defineComponent({
   name: 'Verify Code',
   setup() {
+    const router = useRouter()
     const { userInfo, setCognitoUser } = userAuthInject()
 
-    const user = userInfo.user?.phone
+    const userPhone = userInfo.user?.phone
     const code = ref('')
 
     async function onSubmitOTP(): Promise<void> {
@@ -34,6 +39,13 @@ export default defineComponent({
       if (cognitoUser) {
         try {
           await sendCustomChallengeAnswer(cognitoUser, code.value)
+          const user: User = {
+            phone: userPhone,
+          }
+          await createUser({ user })
+          router.push({
+            path: '/',
+          })
         } catch (error) {
           if (error.code === 'UserLambdaValidationException') {
             const _cognitoUser = await signIn(
@@ -53,7 +65,7 @@ export default defineComponent({
       console.log(`onReset`)
     }
 
-    return { user, code, onSubmitOTP, onReset }
+    return { userPhone, code, onSubmitOTP, onReset }
   },
 })
 </script>
