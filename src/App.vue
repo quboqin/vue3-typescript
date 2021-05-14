@@ -7,6 +7,7 @@
           <el-dropdown-menu>
             <el-dropdown-item command="/">Home</el-dropdown-item>
             <el-dropdown-item command="/signIn">Sign In</el-dropdown-item>
+            <el-dropdown-item command="/signOut">Sign Out</el-dropdown-item>
             <el-dropdown-item command="/addCreditCard"
               >Add Credit Card</el-dropdown-item
             >
@@ -29,6 +30,7 @@ import { useRouter } from 'vue-router'
 import { useAsync } from '@/utils/async'
 import { userAuthProvide, UserInfo } from '@/store/user'
 import { checkHealth } from '@/apis/health'
+import { signOut } from '@/utils/aws-auth'
 
 export default defineComponent({
   setup() {
@@ -36,7 +38,7 @@ export default defineComponent({
 
     const newUser: UserInfo = {
       user: {
-        phone: '+16264895188',
+        phone: '+13233013227',
       },
     }
 
@@ -51,9 +53,16 @@ export default defineComponent({
     )
 
     function onSelectMenuItem(command: unknown) {
-      router.push({
-        path: command as string,
-      })
+      if ((command as string) === '/signOut') {
+        signOut()
+        router.push({
+          path: '/',
+        })
+      } else {
+        router.push({
+          path: command as string,
+        })
+      }
     }
 
     const loading = useAsync(() => {

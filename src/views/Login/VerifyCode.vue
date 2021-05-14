@@ -1,19 +1,16 @@
 <template>
-  <el-header align="center">Verify Code</el-header>
-  <el-main>
-    <el-form label-width="200px">
-      <el-form-item label="Phone or Email">
-        <el-input v-model="userPhone"></el-input>
-      </el-form-item>
-      <el-form-item label="Code">
-        <el-input v-model="code"></el-input>
-      </el-form-item>
-      <el-form-item align="right">
-        <el-button type="primary" @click="onSubmitOTP">Submit</el-button>
-        <el-button @click="onReset">Reset</el-button>
-      </el-form-item>
-    </el-form>
-  </el-main>
+  <el-form label-width="200px">
+    <el-form-item label="Phone or Email">
+      <el-input v-model="userPhone"></el-input>
+    </el-form-item>
+    <el-form-item label="Code">
+      <el-input v-model="code"></el-input>
+    </el-form-item>
+    <el-form-item align="right">
+      <el-button type="primary" @click="onSubmitOTP">Submit</el-button>
+      <el-button @click="onReset">Reset</el-button>
+    </el-form-item>
+  </el-form>
 </template>
 
 <script lang="ts">
@@ -23,13 +20,12 @@ import { signIn, sendCustomChallengeAnswer } from '@/utils/aws-auth'
 import { userAuthInject } from '@/store/user'
 import { createUser } from '@/apis/user'
 import { useRouter } from 'vue-router'
-import { User } from 'quboqin-lib-typescript/lib/user'
 
 export default defineComponent({
   name: 'Verify Code',
   setup() {
     const router = useRouter()
-    const { userInfo, setCognitoUser } = userAuthInject()
+    const { userInfo, setCognitoUser, setUserInfo } = userAuthInject()
 
     const userPhone = userInfo.user?.phone
     const code = ref('')
@@ -39,10 +35,15 @@ export default defineComponent({
       if (cognitoUser) {
         try {
           await sendCustomChallengeAnswer(cognitoUser, code.value)
-          const user: User = {
+          await createUser({
             phone: userPhone,
-          }
-          await createUser({ user })
+          })
+          setUserInfo({
+            cognitoUser: userInfo.cognitoUser,
+            user: {
+              phone: userPhone,
+            },
+          })
           router.push({
             path: '/',
           })
