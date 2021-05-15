@@ -121,18 +121,16 @@
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
-          >创 建</el-button
-        >
+        <el-button type="primary" @click="onCreate()">创 建</el-button>
       </span>
     </template>
   </el-dialog>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted } from 'vue'
+import { defineComponent, ref, reactive, onMounted, Ref } from 'vue'
 
-import { getAllTasks } from '@/apis/task'
+import { getAllTasks, saveTask, removeTask } from '@/apis/task'
 import { userAuthInject } from '@/store/user'
 import {
   Task,
@@ -149,12 +147,18 @@ export default defineComponent({
     const dialogVisible = ref(false)
     const multipleTable = ref()
 
-    const form = reactive(new Task())
+    let form: Task = reactive({
+      title: 'hello',
+      status: TASK_STATUS.IN_PROGRESS,
+      priority: TASK_PRIORITY.HIGH,
+      description: 'description',
+      owner: userPhone,
+    })
 
-    let table: Task[] = reactive([])
+    let table: Ref<Task[]> = ref([])
 
     const getTasks = async () => {
-      table = (await getAllTasks({ phone: userPhone })) as Task[]
+      table.value = (await getAllTasks({ phone: userPhone })) as Task[]
     }
 
     const multipleSelection: number[] = reactive([])
@@ -173,13 +177,21 @@ export default defineComponent({
       multipleSelection.values = val
     }
 
-    function onDelete(index: number, row: unknown) {
-      console.log(`delete item ${row} at ${index}`)
+    async function onDelete(index: number, row: unknown) {
+      await removeTask(row as Record<string, unknown>)
+      table.value = table.value.splice(index, 1)
     }
 
     function onEdit(index: number, row: unknown) {
-      console.log(`edit item ${row} at ${index}`)
       dialogVisible.value = true
+    }
+
+    async function onCreate() {
+      let params = form as Record<string, unknown>
+      params.phone = userPhone
+      await saveTask(params)
+      table.value.push(form)
+      dialogVisible.value = false
     }
 
     onMounted(getTasks)
@@ -197,6 +209,7 @@ export default defineComponent({
       onSelectionChange,
       onDelete,
       onEdit,
+      onCreate,
     }
   },
 })

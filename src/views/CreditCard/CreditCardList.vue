@@ -48,9 +48,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted } from 'vue'
+import { defineComponent, ref, reactive, onMounted, Ref } from 'vue'
 
-import { getAllCards } from '@/apis/credit'
+import { getAllCards, removeCard } from '@/apis/credit'
 import { userAuthInject } from '@/store/user'
 import { payOrder } from '@/apis/payment'
 import { Card } from 'quboqin-lib-typescript/lib/card'
@@ -62,13 +62,13 @@ export default defineComponent({
     const { userInfo } = userAuthInject()
     const userPhone = userInfo.user?.phone
 
-    let table: Card[] = reactive([])
+    let table: Ref<Card[]> = ref([])
 
     const multipleTable = ref()
     const multipleSelection: number[] = reactive([])
 
     const getCards = async () => {
-      table = (await getAllCards({ phone: userPhone })) as Card[]
+      table.value = (await getAllCards({ phone: userPhone })) as Card[]
     }
 
     function onToggleSelection(rows: unknown[]) {
@@ -85,14 +85,16 @@ export default defineComponent({
       multipleSelection.values = val
     }
 
-    function onDelete(index: number, row: unknown) {
-      console.log(`delete item  ${row} ar ${index}`)
+    async function onDelete(index: number, row: unknown) {
+      await removeCard(row as Record<string, unknown>)
+      table.value = table.value.splice(index, 1)
     }
 
     function onDonate(index: number, row: unknown) {
       console.log(`donate ${row} ar ${index}`)
+      const card = row as Card
       payOrder({
-        cardId: 'card.cardId',
+        last4: card.last4,
         amount: '0.5',
         phone: userPhone,
       })

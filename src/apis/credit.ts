@@ -7,3 +7,7 @@ export const saveCard: AxioFunc = (params: Record<string, unknown> = {}) => {
 export const getAllCards: AxioFunc = (params: Record<string, unknown> = {}) => {
   return result('get', '/cards', params)
 }
+
+export const removeCard: AxioFunc = (params: Record<string, unknown> = {}) => {
+  return result('del', '/cards', params)
+}
