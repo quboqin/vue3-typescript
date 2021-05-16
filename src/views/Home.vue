@@ -67,13 +67,17 @@
   >
     <el-form ref="form" :model="form" label-width="80px">
       <el-form-item label="任务名称">
-        <el-input v-model="form.title"></el-input>
+        <el-input v-model="form.title" @input="onChange($event)"></el-input>
       </el-form-item>
       <el-form-item label="负责人">
-        <el-input v-model="form.owner"></el-input>
+        <el-input v-model="form.owner" @input="onChange($event)"></el-input>
       </el-form-item>
       <el-form-item label="任务状态">
-        <el-select v-model="form.status" placeholder="请选择任务状态">
+        <el-select
+          v-model="form.status"
+          placeholder="请选择任务状态"
+          @input="onChange($event)"
+        >
           <el-option
             :label="TASK_STATUS.IN_PROGRESS"
             :value="TASK_STATUS.IN_PROGRESS"
@@ -89,7 +93,11 @@
         </el-select>
       </el-form-item>
       <el-form-item label="任务优先级">
-        <el-select v-model="form.priority" placeholder="请选择任务优先级">
+        <el-select
+          v-model="form.priority"
+          placeholder="请选择任务优先级"
+          @input="onChange($event)"
+        >
           <el-option
             :label="TASK_PRIORITY.HIGH"
             :value="TASK_PRIORITY.HIGH"
@@ -111,11 +119,16 @@
             placeholder="选择日期"
             v-model="form.due"
             style="width: 100%"
+            @input="onChange($event)"
           ></el-date-picker>
         </el-col>
       </el-form-item>
       <el-form-item label="任务描述">
-        <el-input type="textarea" v-model="form.description"></el-input>
+        <el-input
+          type="textarea"
+          v-model="form.description"
+          @input="onChange($event)"
+        ></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -144,7 +157,7 @@ export default defineComponent({
     const { userInfo } = userAuthInject()
     const userPhone = userInfo.user?.phone
 
-    const dialogVisible = ref(false)
+    let dialogVisible = ref(false)
     const multipleTable = ref()
 
     let form: Task = reactive({
@@ -183,7 +196,14 @@ export default defineComponent({
     }
 
     function onEdit(index: number, row: unknown) {
+      const preForm = row as Task
+      form = Object.assign(form, preForm)
       dialogVisible.value = true
+    }
+
+    const onChange = () => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(this as any).$forceUpdate()
     }
 
     async function onCreate() {
@@ -201,6 +221,7 @@ export default defineComponent({
       TASK_STATUS,
       dialogVisible,
       getTasks,
+      userPhone,
       form,
       table,
       multipleTable,
@@ -210,6 +231,7 @@ export default defineComponent({
       onDelete,
       onEdit,
       onCreate,
+      onChange,
     }
   },
 })
