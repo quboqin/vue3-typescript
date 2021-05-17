@@ -2,7 +2,6 @@
   <el-button @click="dialogVisible = true">增加一个任务</el-button>
   <el-button @click="onToggleSelection(table)">全选</el-button>
   <el-button @click="onToggleSelection()">清除</el-button>
-  <el-button @click="onDelete()">删除</el-button>
   <el-table
     ref="multipleTable"
     :data="table"
@@ -60,10 +59,10 @@
     </el-table-column>
   </el-table>
   <el-dialog
-    title="提示"
+    title="任务"
     v-model="dialogVisible"
-    width="30%"
-    :before-close="handleClose"
+    width="60%"
+    :before-close="onClose"
   >
     <el-form ref="form" :model="form" label-width="80px">
       <el-form-item label="任务名称">
@@ -141,10 +140,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted, Ref } from 'vue'
+import { defineComponent, ref, reactive, onMounted, Ref, watch } from 'vue'
 
-import { getAllTasks, saveTask, removeTask } from '@/apis/task'
 import { userAuthInject } from '@/store/user'
+import { getAllTasks, saveTask, removeTask } from '@/apis/task'
 import {
   Task,
   TASK_STATUS,
@@ -157,24 +156,19 @@ export default defineComponent({
     const { userInfo } = userAuthInject()
     const userPhone = userInfo.user?.phone
 
-    let dialogVisible = ref(false)
+    let table: Ref<Task[]> = ref([])
     const multipleTable = ref()
+    const multipleSelection: number[] = reactive([])
 
     let form: Task = reactive({
-      title: 'hello',
+      title: 'task name',
       status: TASK_STATUS.IN_PROGRESS,
       priority: TASK_PRIORITY.HIGH,
-      description: 'description',
+      description: 'task description',
       owner: userPhone,
     })
 
-    let table: Ref<Task[]> = ref([])
-
-    const getTasks = async () => {
-      table.value = (await getAllTasks({ phone: userPhone })) as Task[]
-    }
-
-    const multipleSelection: number[] = reactive([])
+    let dialogVisible = ref(false)
 
     function onToggleSelection(rows: unknown[]) {
       if (rows) {
@@ -206,6 +200,10 @@ export default defineComponent({
       ;(this as any).$forceUpdate()
     }
 
+    function onClose() {
+      console.log(`close dialog`)
+    }
+
     async function onCreate() {
       let params = form as Record<string, unknown>
       params.phone = userPhone
@@ -214,15 +212,20 @@ export default defineComponent({
       dialogVisible.value = false
     }
 
+    const getTasks = async () => {
+      table.value = (await getAllTasks({ phone: userPhone })) as Task[]
+    }
+
     onMounted(getTasks)
+
+    watch(form, (form, prevForm) => {
+      console.log(`title = ${form.title}, prevTitle = ${prevForm.title}`)
+    })
 
     return {
       TASK_PRIORITY,
       TASK_STATUS,
       dialogVisible,
-      getTasks,
-      userPhone,
-      form,
       table,
       multipleTable,
       multipleSelection,
@@ -230,8 +233,12 @@ export default defineComponent({
       onSelectionChange,
       onDelete,
       onEdit,
-      onCreate,
       onChange,
+      onClose,
+      onCreate,
+      getTasks,
+      userPhone,
+      form,
     }
   },
 })

@@ -24,26 +24,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { useAsync } from '@/utils/async'
 import { userAuthProvide, UserInfo } from '@/store/user'
+import { useAsync } from '@/utils/async'
 import { checkHealth } from '@/apis/health'
-import { signOut } from '@/utils/aws-auth'
+import { signOut, getUser } from '@/utils/aws-auth'
 
 export default defineComponent({
+  name: 'App',
   setup() {
-    const router = useRouter()
-
-    const newUser: UserInfo = {
+    const newUser: UserInfo = reactive({
       user: {
-        phone: '+13233013227',
+        phone: '',
       },
-    }
-
+    })
     userAuthProvide(newUser)
-
     const userName = computed(() =>
       newUser.user?.firstName
         ? `${newUser.user?.firstName} ${newUser.user?.lastName}`
@@ -52,15 +49,16 @@ export default defineComponent({
         : newUser.user?.email,
     )
 
-    function onSelectMenuItem(command: unknown) {
-      if ((command as string) === '/signOut') {
+    const router = useRouter()
+    function onSelectMenuItem(command: string) {
+      if (command === '/signOut') {
         signOut()
         router.push({
           path: '/',
         })
       } else {
         router.push({
-          path: command as string,
+          path: command,
         })
       }
     }
@@ -73,6 +71,13 @@ export default defineComponent({
         }, 2000)
       })
     })
+
+    const getUserName = async () => {
+      const user = await getUser()
+      console.log(user.username)
+      newUser.user.phone = user.username
+    }
+    onMounted(getUserName)
 
     return { onSelectMenuItem, userName, loading }
   },
