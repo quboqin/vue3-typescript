@@ -6,11 +6,11 @@ import Amplify from 'aws-amplify'
 import awsconfig from './aws-exports'
 Amplify.configure(awsconfig)
 
-import ElementPlus from 'element-plus'
-import 'element-plus/lib/theme-chalk/index.css'
+import Vant from 'vant'
+import 'vant/lib/index.css'
 
 const app = createApp(App)
 
-app.use(ElementPlus)
+app.use(Vant)
 app.use(router)
 app.mount('#app')

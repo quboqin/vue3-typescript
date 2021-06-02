@@ -1,146 +1,49 @@
 <template>
-  <el-button @click="dialogVisible = true">增加一个任务</el-button>
-  <el-button @click="onToggleSelection(table)">全选</el-button>
-  <el-button @click="onToggleSelection()">清除</el-button>
-  <el-table
-    ref="multipleTable"
-    :data="table"
-    tooltip-effect="dark"
-    style="width: 100%"
-    height="400"
-    @selection-change="onSelectionChange"
-  >
-    <el-table-column fixed type="selection" width="55"> </el-table-column>
-    <el-table-column fixed prop="title" label="Title" width="180">
-    </el-table-column>
-    <el-table-column label="Due" width="120">
-      <template #default="scope">
-        <i class="el-icon-time"></i>
-        <span style="margin-left: 10px">{{ scope.row.due }}</span></template
-      >
-    </el-table-column>
-    <el-table-column prop="status" label="Status" width="150">
-      <template #default="scope">
-        <el-tag
-          :type="
-            scope.row.status === TASK_STATUS.IN_PROGRESS ? 'primary' : 'success'
-          "
-          disable-transitions
-          >{{ scope.row.status }}</el-tag
+  <div>
+    <header></header>
+    <div>
+      <swiper :list="swiperList"></swiper>
+      <div class="category-list">
+        <div
+          v-for="item in categoryList"
+          v-bind:key="item.categoryId"
+          @click="tips"
         >
-      </template>
-    </el-table-column>
-    <el-table-column prop="priority" label="Priority" width="120">
-      <template #default="scope">
-        <el-tag
-          :type="
-            scope.row.priority === TASK_PRIORITY.HIGH ? 'primary' : 'success'
-          "
-          disable-transitions
-          >{{ scope.row.priority }}</el-tag
-        >
-      </template>
-    </el-table-column>
-    <el-table-column prop="owner" label="Owner" width="100"> </el-table-column>
-    <el-table-column prop="description" label="Detail" show-overflow-tooltip>
-    </el-table-column>
-    <el-table-column label="操作">
-      <template #default="scope">
-        <el-button size="mini" @click="onEdit(scope.$index, scope.row)"
-          >编辑</el-button
-        >
-        <el-button
-          size="mini"
-          type="danger"
-          @click="onDelete(scope.$index, scope.row)"
-          >删除</el-button
-        >
-      </template>
-    </el-table-column>
-  </el-table>
-  <el-dialog
-    title="任务"
-    v-model="dialogVisible"
-    width="60%"
-    :before-close="onClose"
-  >
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="任务名称">
-        <el-input v-model="form.title" @input="onChange($event)"></el-input>
-      </el-form-item>
-      <el-form-item label="负责人">
-        <el-input v-model="form.owner" @input="onChange($event)"></el-input>
-      </el-form-item>
-      <el-form-item label="任务状态">
-        <el-select
-          v-model="form.status"
-          placeholder="请选择任务状态"
-          @input="onChange($event)"
-        >
-          <el-option
-            :label="TASK_STATUS.IN_PROGRESS"
-            :value="TASK_STATUS.IN_PROGRESS"
-          ></el-option>
-          <el-option
-            :label="TASK_STATUS.DONE"
-            :value="TASK_STATUS.DONE"
-          ></el-option>
-          <el-option
-            :label="TASK_STATUS.WAITING"
-            :value="TASK_STATUS.WAITING"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="任务优先级">
-        <el-select
-          v-model="form.priority"
-          placeholder="请选择任务优先级"
-          @input="onChange($event)"
-        >
-          <el-option
-            :label="TASK_PRIORITY.HIGH"
-            :value="TASK_PRIORITY.HIGH"
-          ></el-option>
-          <el-option
-            :label="TASK_PRIORITY.MED"
-            :value="TASK_PRIORITY.MED"
-          ></el-option>
-          <el-option
-            :label="TASK_PRIORITY.LOW"
-            :value="TASK_PRIORITY.LOW"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="完成时间">
-        <el-col :span="11">
-          <el-date-picker
-            type="date"
-            placeholder="选择日期"
-            v-model="form.due"
-            style="width: 100%"
-            @input="onChange($event)"
-          ></el-date-picker>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="任务描述">
-        <el-input
-          type="textarea"
-          v-model="form.description"
-          @input="onChange($event)"
-        ></el-input>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onCreate()">创 建</el-button>
-      </span>
-    </template>
-  </el-dialog>
+          <img :src="item.imgUrl" />
+          <span>{{ item.name }}</span>
+        </div>
+      </div>
+      <div class="good">
+        <header class="good-header">新品上线</header>
+        <van-skeleton title :row="3" :loading="loading">
+          <div class="good-box">
+            <div
+              class="good-item"
+              v-for="item in newGoodses"
+              :key="item.goodsId"
+              @click="goToDetail(item)"
+            >
+              <img :src="$filters.prefix(item.goodsCoverImg)" alt="" />
+              <div class="good-desc">
+                <div class="title">{{ item.goodsName }}</div>
+                <div class="price">¥ {{ item.sellingPrice }}</div>
+              </div>
+            </div>
+          </div>
+        </van-skeleton>
+      </div>
+    </div>
+    <tabbar></tabbar>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted, Ref, watch } from 'vue'
+import { defineComponent, reactive, onMounted, toRefs, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
+import { Toast } from 'vant'
+
+import swiper from '@/components/Swiper.vue'
+import tabbar from '@/components/Tabbar.vue'
 
 import { userAuthInject } from '@/store/user'
 import { getAllTasks, saveTask, removeTask } from '@/apis/task'
@@ -152,94 +55,293 @@ import {
 
 export default defineComponent({
   name: 'Home',
+  components: {
+    swiper,
+    tabbar,
+  },
   setup() {
-    const { userInfo } = userAuthInject()
-    const userPhone = userInfo.user?.phone
-
-    let table: Ref<Task[]> = ref([])
-    const multipleTable = ref()
-    const multipleSelection: number[] = reactive([])
-
-    let form: Task = reactive({
-      title: 'task name',
-      status: TASK_STATUS.IN_PROGRESS,
-      priority: TASK_PRIORITY.HIGH,
-      description: 'task description',
-      owner: userPhone,
+    const router = useRouter()
+    const state = reactive({
+      swiperList: [], // 轮播图列表
+      isLogin: false, // 是否已登录
+      headerScroll: false, // 滚动透明判断
+      hots: [],
+      newGoodses: [],
+      recommends: [],
+      categoryList: [
+        {
+          name: '新蜂超市',
+          imgUrl:
+            'https://s.yezgea02.com/1604041127880/%E8%B6%85%E5%B8%82%402x.png',
+          categoryId: 100001,
+        },
+        {
+          name: '新蜂服饰',
+          imgUrl:
+            'https://s.yezgea02.com/1604041127880/%E6%9C%8D%E9%A5%B0%402x.png',
+          categoryId: 100003,
+        },
+        {
+          name: '全球购',
+          imgUrl:
+            'https://s.yezgea02.com/1604041127880/%E5%85%A8%E7%90%83%E8%B4%AD%402x.png',
+          categoryId: 100002,
+        },
+        {
+          name: '新蜂生鲜',
+          imgUrl:
+            'https://s.yezgea02.com/1604041127880/%E7%94%9F%E9%B2%9C%402x.png',
+          categoryId: 100004,
+        },
+        {
+          name: '新蜂到家',
+          imgUrl:
+            'https://s.yezgea02.com/1604041127880/%E5%88%B0%E5%AE%B6%402x.png',
+          categoryId: 100005,
+        },
+        {
+          name: '充值缴费',
+          imgUrl:
+            'https://s.yezgea02.com/1604041127880/%E5%85%85%E5%80%BC%402x.png',
+          categoryId: 100006,
+        },
+        {
+          name: '9.9元拼',
+          imgUrl: 'https://s.yezgea02.com/1604041127880/9.9%402x.png',
+          categoryId: 100007,
+        },
+        {
+          name: '领劵',
+          imgUrl:
+            'https://s.yezgea02.com/1604041127880/%E9%A2%86%E5%88%B8%402x.png',
+          categoryId: 100008,
+        },
+        {
+          name: '省钱',
+          imgUrl:
+            'https://s.yezgea02.com/1604041127880/%E7%9C%81%E9%92%B1%402x.png',
+          categoryId: 100009,
+        },
+        {
+          name: '全部',
+          imgUrl:
+            'https://s.yezgea02.com/1604041127880/%E5%85%A8%E9%83%A8%402x.png',
+          categoryId: 100010,
+        },
+      ],
+      loading: true,
     })
-
-    let dialogVisible = ref(false)
-
-    function onToggleSelection(rows: unknown[]) {
-      if (rows) {
-        rows.forEach((row) => {
-          multipleTable.value.toggleRowSelection(row)
-        })
-      } else {
-        multipleTable.value.clearSelection()
+    onMounted(async () => {
+      const token = getLocal('token')
+      if (token) {
+        state.isLogin = true
       }
-    }
-
-    function onSelectionChange(val: () => IterableIterator<number>) {
-      multipleSelection.values = val
-    }
-
-    async function onDelete(index: number, row: unknown) {
-      await removeTask(row as Record<string, unknown>)
-      table.value = table.value.splice(index, 1)
-    }
-
-    function onEdit(index: number, row: unknown) {
-      const preForm = row as Task
-      form = Object.assign(form, preForm)
-      dialogVisible.value = true
-    }
-
-    const onChange = () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(this as any).$forceUpdate()
-    }
-
-    function onClose() {
-      console.log(`close dialog`)
-    }
-
-    async function onCreate() {
-      let params = form as Record<string, unknown>
-      params.phone = userPhone
-      await saveTask(params)
-      table.value.push(form)
-      dialogVisible.value = false
-    }
-
-    const getTasks = async () => {
-      table.value = (await getAllTasks({ phone: userPhone })) as Task[]
-    }
-
-    onMounted(getTasks)
-
-    watch(form, (form, prevForm) => {
-      console.log(`title = ${form.title}, prevTitle = ${prevForm.title}`)
+      Toast.loading({
+        message: '加载中...',
+        forbidClick: true,
+      })
+      const { data } = await getHome()
+      state.swiperList = data.carousels
+      state.newGoodses = data.newGoodses
+      state.hots = data.hotGoodses
+      state.recommends = data.recommendGoodses
+      state.loading = false
+      Toast.clear()
     })
+
+    nextTick(() => {
+      window.addEventListener('scroll', () => {
+        let scrollTop =
+          window.pageYOffset ||
+          document.documentElement.scrollTop ||
+          document.body.scrollTop
+        scrollTop > 100
+          ? (state.headerScroll = true)
+          : (state.headerScroll = false)
+      })
+    })
+
+    const goToDetail = (item) => {
+      router.push({ path: `/product/${item.goodsId}` })
+    }
+
+    const tips = () => {
+      Toast('敬请期待')
+    }
 
     return {
-      TASK_PRIORITY,
-      TASK_STATUS,
-      dialogVisible,
-      table,
-      multipleTable,
-      multipleSelection,
-      onToggleSelection,
-      onSelectionChange,
-      onDelete,
-      onEdit,
-      onChange,
-      onClose,
-      onCreate,
-      getTasks,
-      userPhone,
-      form,
+      ...toRefs(state),
+      goToDetail,
+      tips,
     }
   },
 })
 </script>
+
+<style lang="stylus" scoped>
+@import '../common/style/mixin';
+.home-header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    .wh(100%, 50px);
+    .fj();
+    line-height: 50px;
+    padding: 0 15px;
+    .boxSizing();
+    font-size: 15px;
+    color: #fff;
+    z-index: 10000;
+    .nbmenu2 {
+      color: @primary;
+    }
+    &.active {
+      background: @primary;
+      .nbmenu2 {
+        color: #fff;
+      }
+      .login {
+        color: #fff;
+      }
+    }
+
+    .header-search {
+        display: flex;
+        .wh(74%, 20px);
+        line-height: 20px;
+        margin: 10px 0;
+        padding: 5px 0;
+        color: #232326;
+        background: rgba(255, 255, 255, .7);
+        border-radius: 20px;
+        .app-name {
+            padding: 0 10px;
+            color: @primary;
+            font-size: 20px;
+            font-weight: bold;
+            border-right: 1px solid #666;
+        }
+        .icon-search {
+            padding: 0 10px;
+            font-size: 17px;
+        }
+        .search-title {
+            font-size: 12px;
+            color: #666;
+            line-height: 21px;
+        }
+    }
+    .icon-iconyonghu{
+      color: #fff;
+      font-size: 22px;
+    }
+    .login {
+      color: @primary;
+      line-height: 52px;
+      .van-icon-manager-o {
+        font-size: 20px;
+        vertical-align: -3px;
+      }
+    }
+}
+.category-list {
+  display: flex;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  width: 100%;
+  padding-bottom: 13px;
+  div {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    text-align: center;
+    img {
+      .wh(36px, 36px);
+      margin: 13px auto 8px auto;
+    }
+  }
+}
+.good {
+  .good-header {
+    background: #f9f9f9;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    color: @primary;
+    font-size: 16px;
+    font-weight: 500;
+  }
+  .good-box {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    .good-item {
+      box-sizing: border-box;
+      width: 50%;
+      border-bottom: 1PX solid #e9e9e9;
+      padding: 10px 10px;
+      img {
+        display: block;
+        width: 120px;
+        margin: 0 auto;
+      }
+      .good-desc {
+        text-align: center;
+        font-size: 14px;
+        padding: 10px 0;
+        .title {
+          color: #222333;
+        }
+        .price {
+          color: @primary;
+        }
+      }
+      &:nth-child(2n + 1) {
+        border-right: 1PX solid #e9e9e9;
+      }
+    }
+  }
+}
+.floor-list {
+    width: 100%;
+    padding-bottom: 50px;
+    .floor-head {
+      width: 100%;
+      height: 40px;
+      background: #F6F6F6;
+    }
+    .floor-content {
+      display: flex;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+      width: 100%;
+      .boxSizing();
+      .floor-category {
+        width: 50%;
+        padding: 10px;
+        border-right: 1px solid #dcdcdc;
+        border-bottom: 1px solid #dcdcdc;
+        .boxSizing();
+        &:nth-child(2n) {
+          border-right: none;
+        }
+        p {
+          font-size: 17px;
+          color: #333;
+          &:nth-child(2) {
+            padding: 5px 0;
+            font-size: 13px;
+            color: @primary;
+          }
+        }
+        .floor-products {
+          .fj();
+          width: 100%;
+          img {
+            .wh(65px, 65px);
+          }
+        }
+    }
+  }
+}
+</style>

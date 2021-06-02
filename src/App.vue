@@ -1,85 +1,38 @@
 <template>
-  <el-container>
-    <el-header style="text-align: right; font-size: 12px">
-      <el-dropdown @command="onSelectMenuItem">
-        <i class="el-icon-setting" style="margin-right: 15px"></i>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item command="/">Home</el-dropdown-item>
-            <el-dropdown-item command="/signIn">Sign In</el-dropdown-item>
-            <el-dropdown-item command="/signOut">Sign Out</el-dropdown-item>
-            <el-dropdown-item command="/addCreditCard"
-              >Add Credit Card</el-dropdown-item
-            >
-            <el-dropdown-item command="/creditCardList"
-              >Credit Card List</el-dropdown-item
-            >
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-      <span v-show="!loading">{{ userName }}</span>
-    </el-header>
-    <el-main><router-view /></el-main>
-  </el-container>
+  <div id="app">
+    <router-view class="router-view" v-slot="{ Component }">
+      <transition :name="transitionName">
+        <component :is="Component" />
+      </transition>
+    </router-view>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted, reactive } from 'vue'
+import { defineComponent, reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
-
-import { userAuthProvide, UserInfo } from '@/store/user'
-import { useAsync } from '@/utils/async'
-import { checkHealth } from '@/apis/health'
-import { signOut, getUser } from '@/utils/aws-auth'
+import './types/vue-router-plugin'
 
 export default defineComponent({
   name: 'App',
   setup() {
-    const newUser: UserInfo = reactive({
-      user: {
-        phone: '',
-      },
-    })
-    userAuthProvide(newUser)
-    const userName = computed(() =>
-      newUser.user?.firstName
-        ? `${newUser.user?.firstName} ${newUser.user?.lastName}`
-        : newUser.user?.phone
-        ? newUser.user?.phone
-        : newUser.user?.email,
-    )
-
     const router = useRouter()
-    function onSelectMenuItem(command: string) {
-      if (command === '/signOut') {
-        signOut()
-        router.push({
-          path: '/',
-        })
+    const state = reactive({
+      transitionName: 'slide-left',
+    })
+    router.beforeEach((to, from) => {
+      if (to.meta.index > from.meta.index) {
+        state.transitionName = 'slide-left'
+      } else if (to.meta.index < from.meta.index) {
+        state.transitionName = 'slide-right'
       } else {
-        router.push({
-          path: command,
-        })
+        state.transitionName = ''
       }
-    }
-
-    const loading = useAsync(() => {
-      return new Promise<void>((resolve) => {
-        setTimeout(() => {
-          checkHealth({})
-          resolve()
-        }, 2000)
-      })
     })
 
-    const getUserName = async () => {
-      const user = await getUser()
-      console.log(user.username)
-      newUser.user.phone = user.username
+    return {
+      ...toRefs(state),
     }
-    onMounted(getUserName)
-
-    return { onSelectMenuItem, userName, loading }
   },
 })
 </script>
@@ -94,9 +47,45 @@ export default defineComponent({
   margin-top: 60px;
 }
 
-.el-header {
-  background-color: #B3C0D1;
-  color: #333;
-  line-height: 60px;
+.router-view {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: 0 auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.slide-right-enter-active, .slide-right-leave-active, .slide-left-enter-active, .slide-left-leave-active {
+  height: 100%;
+  will-change: transform;
+  transition: all 500ms;
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+.slide-right-enter {
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0);
+}
+
+.slide-right-leave-active {
+  opacity: 0;
+  transform: translate3d(100%, 0, 0);
+}
+
+.slide-left-enter {
+  opacity: 0;
+  transform: translate3d(100%, 0, 0);
+}
+
+.slide-left-leave-active {
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0);
+}
+
+.van-badge--fixed {
+  z-index: 1000;
 }
 </style>
