@@ -39,9 +39,9 @@ export default defineComponent({
       transitionName: 'slide-left',
     })
     router.beforeEach((to, from) => {
-      if (to.meta.index > from.meta.index) {
+      if ((to.meta.index || 0) > (from.meta.index || 0)) {
         state.transitionName = 'slide-left'
-      } else if (to.meta.index < from.meta.index) {
+      } else if ((to.meta.index || 0) < (from.meta.index || 0)) {
         state.transitionName = 'slide-right'
       } else {
         state.transitionName = ''
