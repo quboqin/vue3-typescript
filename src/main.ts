@@ -9,6 +9,8 @@ Amplify.configure(awsconfig)
 import ElementPlus from 'element-plus'
 import 'element-plus/lib/theme-chalk/index.css'
 
+import 'tailwindcss/tailwind.css'
+
 const app = createApp(App)
 
 app.use(ElementPlus)

@@ -3,8 +3,8 @@ import { CognitoUser } from 'amazon-cognito-identity-js'
 
 import { User } from 'quboqin-lib-typescript/lib/user'
 
-export class UserInfo {
-  user?: User
+export interface UserInfo {
+  user: User
   cognitoUser?: CognitoUser
 }
 

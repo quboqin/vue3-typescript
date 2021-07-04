@@ -1,150 +1,16 @@
 <template>
-  <el-button @click="dialogVisible = true">增加一个任务</el-button>
-  <el-button @click="onToggleSelection(table)">全选</el-button>
-  <el-button @click="onToggleSelection()">清除</el-button>
-  <el-button @click="onDelete()">删除</el-button>
-  <el-table
-    ref="multipleTable"
-    :data="table"
-    tooltip-effect="dark"
-    style="width: 100%"
-    height="400"
-    @selection-change="onSelectionChange"
-  >
-    <el-table-column fixed type="selection" width="55"> </el-table-column>
-    <el-table-column fixed prop="title" label="Title" width="180">
-    </el-table-column>
-    <el-table-column label="Due" width="120">
-      <template #default="scope">
-        <i class="el-icon-time"></i>
-        <span style="margin-left: 10px">{{ scope.row.due }}</span></template
-      >
-    </el-table-column>
-    <el-table-column prop="status" label="Status" width="150">
-      <template #default="scope">
-        <el-tag
-          :type="
-            scope.row.status === TASK_STATUS.IN_PROGRESS ? 'primary' : 'success'
-          "
-          disable-transitions
-          >{{ scope.row.status }}</el-tag
-        >
-      </template>
-    </el-table-column>
-    <el-table-column prop="priority" label="Priority" width="120">
-      <template #default="scope">
-        <el-tag
-          :type="
-            scope.row.priority === TASK_PRIORITY.HIGH ? 'primary' : 'success'
-          "
-          disable-transitions
-          >{{ scope.row.priority }}</el-tag
-        >
-      </template>
-    </el-table-column>
-    <el-table-column prop="owner" label="Owner" width="100"> </el-table-column>
-    <el-table-column prop="description" label="Detail" show-overflow-tooltip>
-    </el-table-column>
-    <el-table-column label="操作">
-      <template #default="scope">
-        <el-button size="mini" @click="onEdit(scope.$index, scope.row)"
-          >编辑</el-button
-        >
-        <el-button
-          size="mini"
-          type="danger"
-          @click="onDelete(scope.$index, scope.row)"
-          >删除</el-button
-        >
-      </template>
-    </el-table-column>
-  </el-table>
-  <el-dialog
-    title="提示"
-    v-model="dialogVisible"
-    width="30%"
-    :before-close="handleClose"
-  >
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="任务名称">
-        <el-input v-model="form.title" @input="onChange($event)"></el-input>
-      </el-form-item>
-      <el-form-item label="负责人">
-        <el-input v-model="form.owner" @input="onChange($event)"></el-input>
-      </el-form-item>
-      <el-form-item label="任务状态">
-        <el-select
-          v-model="form.status"
-          placeholder="请选择任务状态"
-          @input="onChange($event)"
-        >
-          <el-option
-            :label="TASK_STATUS.IN_PROGRESS"
-            :value="TASK_STATUS.IN_PROGRESS"
-          ></el-option>
-          <el-option
-            :label="TASK_STATUS.DONE"
-            :value="TASK_STATUS.DONE"
-          ></el-option>
-          <el-option
-            :label="TASK_STATUS.WAITING"
-            :value="TASK_STATUS.WAITING"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="任务优先级">
-        <el-select
-          v-model="form.priority"
-          placeholder="请选择任务优先级"
-          @input="onChange($event)"
-        >
-          <el-option
-            :label="TASK_PRIORITY.HIGH"
-            :value="TASK_PRIORITY.HIGH"
-          ></el-option>
-          <el-option
-            :label="TASK_PRIORITY.MED"
-            :value="TASK_PRIORITY.MED"
-          ></el-option>
-          <el-option
-            :label="TASK_PRIORITY.LOW"
-            :value="TASK_PRIORITY.LOW"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="完成时间">
-        <el-col :span="11">
-          <el-date-picker
-            type="date"
-            placeholder="选择日期"
-            v-model="form.due"
-            style="width: 100%"
-            @input="onChange($event)"
-          ></el-date-picker>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="任务描述">
-        <el-input
-          type="textarea"
-          v-model="form.description"
-          @input="onChange($event)"
-        ></el-input>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onCreate()">创 建</el-button>
-      </span>
-    </template>
-  </el-dialog>
+  <div>
+    <header></header>
+    <nav-bar />
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted, Ref } from 'vue'
+import { defineComponent, ref, reactive, onMounted, Ref, watch } from 'vue'
 
-import { getAllTasks, saveTask, removeTask } from '@/apis/task'
+import navBar from '@/components/NavBar.vue'
 import { userAuthInject } from '@/store/user'
+import { getAllTasks, saveTask, removeTask } from '@/apis/task'
 import {
   Task,
   TASK_STATUS,
@@ -153,28 +19,26 @@ import {
 
 export default defineComponent({
   name: 'Home',
+  components: {
+    navBar,
+  },
   setup() {
     const { userInfo } = userAuthInject()
     const userPhone = userInfo.user?.phone
 
-    let dialogVisible = ref(false)
+    let table: Ref<Task[]> = ref([])
     const multipleTable = ref()
+    const multipleSelection: number[] = reactive([])
 
     let form: Task = reactive({
-      title: 'hello',
+      title: 'task name',
       status: TASK_STATUS.IN_PROGRESS,
       priority: TASK_PRIORITY.HIGH,
-      description: 'description',
+      description: 'task description',
       owner: userPhone,
     })
 
-    let table: Ref<Task[]> = ref([])
-
-    const getTasks = async () => {
-      table.value = (await getAllTasks({ phone: userPhone })) as Task[]
-    }
-
-    const multipleSelection: number[] = reactive([])
+    let dialogVisible = ref(false)
 
     function onToggleSelection(rows: unknown[]) {
       if (rows) {
@@ -206,6 +70,10 @@ export default defineComponent({
       ;(this as any).$forceUpdate()
     }
 
+    function onClose() {
+      console.log(`close dialog`)
+    }
+
     async function onCreate() {
       let params = form as Record<string, unknown>
       params.phone = userPhone
@@ -214,15 +82,20 @@ export default defineComponent({
       dialogVisible.value = false
     }
 
+    const getTasks = async () => {
+      table.value = (await getAllTasks({ phone: userPhone })) as Task[]
+    }
+
     onMounted(getTasks)
+
+    watch(form, (form, prevForm) => {
+      console.log(`title = ${form.title}, prevTitle = ${prevForm.title}`)
+    })
 
     return {
       TASK_PRIORITY,
       TASK_STATUS,
       dialogVisible,
-      getTasks,
-      userPhone,
-      form,
       table,
       multipleTable,
       multipleSelection,
@@ -230,8 +103,12 @@ export default defineComponent({
       onSelectionChange,
       onDelete,
       onEdit,
-      onCreate,
       onChange,
+      onClose,
+      onCreate,
+      getTasks,
+      userPhone,
+      form,
     }
   },
 })

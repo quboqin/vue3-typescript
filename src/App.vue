@@ -1,49 +1,31 @@
 <template>
-  <el-container>
-    <el-header style="text-align: right; font-size: 12px">
-      <el-dropdown @command="onSelectMenuItem">
-        <i class="el-icon-setting" style="margin-right: 15px"></i>
-        <template #dropdown>
-          <el-dropdown-menu>
-            <el-dropdown-item command="/">Home</el-dropdown-item>
-            <el-dropdown-item command="/signIn">Sign In</el-dropdown-item>
-            <el-dropdown-item command="/signOut">Sign Out</el-dropdown-item>
-            <el-dropdown-item command="/addCreditCard"
-              >Add Credit Card</el-dropdown-item
-            >
-            <el-dropdown-item command="/creditCardList"
-              >Credit Card List</el-dropdown-item
-            >
-          </el-dropdown-menu>
-        </template>
-      </el-dropdown>
-      <span v-show="!loading">{{ userName }}</span>
-    </el-header>
-    <el-main><router-view /></el-main>
-  </el-container>
+  <div id="app">
+    <router-view class="router-view" v-slot="{ Component }">
+      <transition :name="transitionName">
+        <component :is="Component" />
+      </transition>
+    </router-view>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, onMounted, reactive, toRefs } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { useAsync } from '@/utils/async'
 import { userAuthProvide, UserInfo } from '@/store/user'
+import { useAsync } from '@/utils/async'
 import { checkHealth } from '@/apis/health'
-import { signOut } from '@/utils/aws-auth'
+import { getUser } from '@/utils/aws-auth'
 
 export default defineComponent({
+  name: 'App',
   setup() {
-    const router = useRouter()
-
-    const newUser: UserInfo = {
+    const newUser: UserInfo = reactive({
       user: {
-        phone: '+13233013227',
+        phone: '',
       },
-    }
-
+    })
     userAuthProvide(newUser)
-
     const userName = computed(() =>
       newUser.user?.firstName
         ? `${newUser.user?.firstName} ${newUser.user?.lastName}`
@@ -52,18 +34,19 @@ export default defineComponent({
         : newUser.user?.email,
     )
 
-    function onSelectMenuItem(command: unknown) {
-      if ((command as string) === '/signOut') {
-        signOut()
-        router.push({
-          path: '/',
-        })
+    const router = useRouter()
+    const state = reactive({
+      transitionName: 'slide-left',
+    })
+    router.beforeEach((to, from) => {
+      if ((to.meta.index || 0) > (from.meta.index || 0)) {
+        state.transitionName = 'slide-left'
+      } else if ((to.meta.index || 0) < (from.meta.index || 0)) {
+        state.transitionName = 'slide-right'
       } else {
-        router.push({
-          path: command as string,
-        })
+        state.transitionName = ''
       }
-    }
+    })
 
     const loading = useAsync(() => {
       return new Promise<void>((resolve) => {
@@ -74,24 +57,67 @@ export default defineComponent({
       })
     })
 
-    return { onSelectMenuItem, userName, loading }
+    const getUserName = async () => {
+      const user = await getUser()
+      newUser.user.phone = user.username
+    }
+    onMounted(getUserName)
+
+    return { ...toRefs(state), userName, loading }
   },
 })
 </script>
 
-<style lang="stylus">
+<style lang="less">
+html,
+body {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  height: 100%;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: left;
+  // text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 
-.el-header {
-  background-color: #B3C0D1;
-  color: #333;
-  line-height: 60px;
+.router-view {
+  width: 100%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  margin: 0 auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.slide-right-enter-active,
+.slide-right-leave-active,
+.slide-left-enter-active,
+.slide-left-leave-active {
+  height: 100%;
+  will-change: transform;
+  transition: all 500ms;
+  position: absolute;
+  backface-visibility: hidden;
+}
+.slide-right-enter {
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0);
+}
+.slide-right-leave-active {
+  opacity: 0;
+  transform: translate3d(100%, 0, 0);
+}
+.slide-left-enter {
+  opacity: 0;
+  transform: translate3d(100%, 0, 0);
+}
+.slide-left-leave-active {
+  opacity: 0;
+  transform: translate3d(-100%, 0, 0);
 }
 </style>
