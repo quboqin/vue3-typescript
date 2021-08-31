@@ -213,15 +213,15 @@ amplify init
 
 ![amplify-init](./doc/amplify-init.png)
 
-2. 同时创建了一个后端环境，先命名为 `staging`
+2. 同时创建了一个后端环境，先命名为 `dev`
 3. 进入 AWS Console， 到 Amplify 下，进入刚才创建的 `vue3typescript APP`。连接 Github 仓库和对应的 aws-staging 分支。并在关联的后端服务上选择 `staging`
-4. 连接 Github 仓库和对应的 aws-production 分支。通过 Amplify 命令行创建一个新的后端环境 `production`
+4. 连接 Github 仓库和对应的 aws-production 分支。通过 Amplify 命令行创建一个新的后端环境 `online`
 
 ```shell
 amplify env add
 ```
 
-然后在 Amplify 后台的 aws-production 前端环境绑定 `production`
+然后在 Amplify 后台的 aws-production 前端环境绑定 `online`
 ![amplify-env-backend](./doc/amplify-env-backend.png)
 
 #### 创建 amplify.yaml 文件，修改 build 的脚本
@@ -261,6 +261,11 @@ frontend:
 这里的 VUE_APP_URL 是在 **编译** 时候，覆盖 axios 默认的 BASE_URL，指向对应的 Node Server，不同的分支也可以有不同的 Value
 **注意不要添加 NODE_ENV=production，设置了这个后 npm ci 不会 install devDependencies 下的模块，会导致 npm run build 报错无法找到 vue-cli-service**
 **Vue 的 Webpack 会根据 --mode [staging | production ] 找到对应的 .env.\* 文件， 在这些中再声明 NODE_ENV=production**
+
+#### 安装 aws-amplify 和 aws-amplify-vue 库
+``` shell
+npm i aws-amplify aws-amplify-vue
+```
 
 #### 创建 Amplify 角色
 
