@@ -1,244 +1,137 @@
 <template>
-  <el-button @click="dialogVisible = true">增加一个任务</el-button>
-  <el-button @click="onToggleSelection(table)">全选</el-button>
-  <el-button @click="onToggleSelection()">清除</el-button>
-  <el-table
-    ref="multipleTable"
-    :data="table"
-    tooltip-effect="dark"
-    style="width: 100%"
-    height="400"
-    @selection-change="onSelectionChange"
-  >
-    <el-table-column fixed type="selection" width="55"> </el-table-column>
-    <el-table-column fixed prop="title" label="Title" width="180">
-    </el-table-column>
-    <el-table-column label="Due" width="120">
-      <template #default="scope">
-        <i class="el-icon-time"></i>
-        <span style="margin-left: 10px">{{ scope.row.due }}</span></template
-      >
-    </el-table-column>
-    <el-table-column prop="status" label="Status" width="150">
-      <template #default="scope">
-        <el-tag
-          :type="
-            scope.row.status === TASK_STATUS.IN_PROGRESS ? 'primary' : 'success'
-          "
-          disable-transitions
-          >{{ scope.row.status }}</el-tag
-        >
-      </template>
-    </el-table-column>
-    <el-table-column prop="priority" label="Priority" width="120">
-      <template #default="scope">
-        <el-tag
-          :type="
-            scope.row.priority === TASK_PRIORITY.HIGH ? 'primary' : 'success'
-          "
-          disable-transitions
-          >{{ scope.row.priority }}</el-tag
-        >
-      </template>
-    </el-table-column>
-    <el-table-column prop="owner" label="Owner" width="100"> </el-table-column>
-    <el-table-column prop="description" label="Detail" show-overflow-tooltip>
-    </el-table-column>
-    <el-table-column label="操作">
-      <template #default="scope">
-        <el-button size="mini" @click="onEdit(scope.$index, scope.row)"
-          >编辑</el-button
-        >
-        <el-button
-          size="mini"
-          type="danger"
-          @click="onDelete(scope.$index, scope.row)"
-          >删除</el-button
-        >
-      </template>
-    </el-table-column>
-  </el-table>
-  <el-dialog
-    title="任务"
-    v-model="dialogVisible"
-    width="60%"
-    :before-close="onClose"
-  >
-    <el-form ref="form" :model="form" label-width="80px">
-      <el-form-item label="任务名称">
-        <el-input v-model="form.title" @input="onChange($event)"></el-input>
-      </el-form-item>
-      <el-form-item label="负责人">
-        <el-input v-model="form.owner" @input="onChange($event)"></el-input>
-      </el-form-item>
-      <el-form-item label="任务状态">
-        <el-select
-          v-model="form.status"
-          placeholder="请选择任务状态"
-          @input="onChange($event)"
-        >
-          <el-option
-            :label="TASK_STATUS.IN_PROGRESS"
-            :value="TASK_STATUS.IN_PROGRESS"
-          ></el-option>
-          <el-option
-            :label="TASK_STATUS.DONE"
-            :value="TASK_STATUS.DONE"
-          ></el-option>
-          <el-option
-            :label="TASK_STATUS.WAITING"
-            :value="TASK_STATUS.WAITING"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="任务优先级">
-        <el-select
-          v-model="form.priority"
-          placeholder="请选择任务优先级"
-          @input="onChange($event)"
-        >
-          <el-option
-            :label="TASK_PRIORITY.HIGH"
-            :value="TASK_PRIORITY.HIGH"
-          ></el-option>
-          <el-option
-            :label="TASK_PRIORITY.MED"
-            :value="TASK_PRIORITY.MED"
-          ></el-option>
-          <el-option
-            :label="TASK_PRIORITY.LOW"
-            :value="TASK_PRIORITY.LOW"
-          ></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="完成时间">
-        <el-col :span="11">
-          <el-date-picker
-            type="date"
-            placeholder="选择日期"
-            v-model="form.due"
-            style="width: 100%"
-            @input="onChange($event)"
-          ></el-date-picker>
-        </el-col>
-      </el-form-item>
-      <el-form-item label="任务描述">
-        <el-input
-          type="textarea"
-          v-model="form.description"
-          @input="onChange($event)"
-        ></el-input>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onCreate()">创 建</el-button>
-      </span>
+  <Header>
+    <template #left>
+      <p class="mdi mdi-view-grid-outline"></p>
     </template>
-  </el-dialog>
+
+    <template #default>
+      <van-search
+        v-model="searchQuery"
+        placeholder="请输入要搜索的商品"
+        background="#4fc08d00"
+        shape="round"
+        clearable
+      />
+    </template>
+
+    <template #right>
+      <van-badge :content="itemCount">
+        <p class="mdi mdi-cart" @click="onCart"></p>
+      </van-badge>
+    </template>
+  </Header>
+  <div class="mt-14">
+    <van-tabs v-model:active="active" background="#fee2e2" ref="tabsRef">
+      <van-tab v-for="(item, index) in categories" :title="item" :key="index">
+        <div class="flex flex-wrap justify-start">
+          <GoodCell
+            v-for="(_item, index) in goodsMatchingCategory(item)"
+            :key="_item.id"
+            :item="_item"
+            class="w-1/2"
+            @add-cart="addItem(index)"
+          >
+          </GoodCell>
+        </div>
+      </van-tab>
+    </van-tabs>
+  </div>
+  <TabBar></TabBar>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted, Ref, watch } from 'vue'
+import { defineComponent, ref, reactive, watch, toRefs, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import type { TabsInstance } from 'vant'
 
+import Header from '@/components/Header.vue'
+import GoodCell from '@/components/GoodCell.vue'
+import TabBar from '@/components/Tabbar.vue'
+
+import { Good, Category } from 'quboqin-lib-typescript/lib/goods'
+import { Item } from 'quboqin-lib-typescript/lib/item'
+import { getAllGoods } from '@/apis/goods'
 import { userAuthInject } from '@/store/user'
-import { getAllTasks, saveTask, removeTask } from '@/apis/task'
-import {
-  Task,
-  TASK_STATUS,
-  TASK_PRIORITY,
-} from 'quboqin-lib-typescript/lib/task'
 
 export default defineComponent({
   name: 'Home',
+  components: {
+    Header,
+    GoodCell,
+    TabBar,
+  },
   setup() {
-    const { userInfo } = userAuthInject()
-    const userPhone = userInfo.user?.phone
+    const router = useRouter()
+    const { userInfo, addCart } = userAuthInject()
 
-    let table: Ref<Task[]> = ref([])
-    const multipleTable = ref()
-    const multipleSelection: number[] = reactive([])
+    const categories = Object.values(Category)
 
-    let form: Task = reactive({
-      title: 'task name',
-      status: TASK_STATUS.IN_PROGRESS,
-      priority: TASK_PRIORITY.HIGH,
-      description: 'task description',
-      owner: userPhone,
+    const tabsRef = ref<TabsInstance>()
+
+    const state = reactive({
+      goods: [] as Good[],
+      searchQuery: '',
+      itemCount: userInfo.cart?.items ? userInfo.cart.items.length : 0,
+      active: 0,
     })
 
-    let dialogVisible = ref(false)
+    function onCart() {
+      router.push('cart')
+    }
 
-    function onToggleSelection(rows: unknown[]) {
-      if (rows) {
-        rows.forEach((row) => {
-          multipleTable.value.toggleRowSelection(row)
-        })
+    function goodsMatchingCategory(category: string) {
+      if (category === Category.ALL) {
+        if (state.searchQuery === '') {
+          return state.goods
+        } else {
+          return state.goods.filter(item => {
+            return item.name
+              .toLowerCase()
+              .includes(state.searchQuery.toLowerCase())
+          })
+        }
       } else {
-        multipleTable.value.clearSelection()
+        return state.goods.filter(item => {
+          return item.category.includes(category)
+        })
       }
     }
 
-    function onSelectionChange(val: () => IterableIterator<number>) {
-      multipleSelection.values = val
+    function addItem(index: number) {
+      const item = new Item()
+      item.amount = 1
+      item.goodsId = state.goods[index].id
+      item.imgUrl = state.goods[index].imgUrl
+      item.price = state.goods[index].price
+      item.name = state.goods[index].name
+      addCart(item)
+      state.itemCount++
     }
 
-    async function onDelete(index: number, row: unknown) {
-      await removeTask(row as Record<string, unknown>)
-      table.value = table.value.splice(index, 1)
+    // function onChangeTab(index: number) {
+    //   console.log(`${Object.values(Category)[index]}`)
+    // }
+
+    watch(
+      () => state.searchQuery,
+      newValue => {
+        console.log('The new search value is: ' + newValue)
+        tabsRef.value?.scrollTo(0)
+      },
+    )
+
+    const init = async () => {
+      state.goods = (await getAllGoods({})) as Good[]
     }
-
-    function onEdit(index: number, row: unknown) {
-      const preForm = row as Task
-      form = Object.assign(form, preForm)
-      dialogVisible.value = true
-    }
-
-    const onChange = () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;(this as any).$forceUpdate()
-    }
-
-    function onClose() {
-      console.log(`close dialog`)
-    }
-
-    async function onCreate() {
-      let params = form as Record<string, unknown>
-      params.phone = userPhone
-      await saveTask(params)
-      table.value.push(form)
-      dialogVisible.value = false
-    }
-
-    const getTasks = async () => {
-      table.value = (await getAllTasks({ phone: userPhone })) as Task[]
-    }
-
-    onMounted(getTasks)
-
-    watch(form, (form, prevForm) => {
-      console.log(`title = ${form.title}, prevTitle = ${prevForm.title}`)
-    })
+    onMounted(init)
 
     return {
-      TASK_PRIORITY,
-      TASK_STATUS,
-      dialogVisible,
-      table,
-      multipleTable,
-      multipleSelection,
-      onToggleSelection,
-      onSelectionChange,
-      onDelete,
-      onEdit,
-      onChange,
-      onClose,
-      onCreate,
-      getTasks,
-      userPhone,
-      form,
+      ...toRefs(state),
+      categories,
+      tabsRef,
+      onCart,
+      addItem,
+      goodsMatchingCategory,
     }
   },
 })

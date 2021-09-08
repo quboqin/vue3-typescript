@@ -1,5 +1,5 @@
-import { result, AxioFunc } from '@/utils/axios'
+import { result } from '@/utils/axios'
 
-export const checkHealth: AxioFunc = (params: Record<string, unknown> = {}) => {
+export function checkHealth<T, U>(params: T): Promise<U | void> {
   return result('get', '/health', params)
 }

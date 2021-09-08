@@ -1,0 +1,50 @@
+[
+  {
+    "id": "10001",
+    "name": "Burge",
+    "desc": "burge with tomatoes and lettuce",
+    "img": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=902&q=80",
+    "price": 3.14,
+    "discount": 0.1512
+  },
+  {
+    "id": "10002",
+    "name": "Pizza",
+    "desc": "pizza with berries",
+    "img": "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2250&q=80",
+    "price": 6.88,
+    "discount": 0.21
+  },
+  {
+    "id": "10003",
+    "name": "Salad",
+    "desc": "bowl of vegetable salads",
+    "img": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+    "price": 4.99,
+    "discount": 0.15
+  },
+  {
+    "id": "10004",
+    "name": "Burge",
+    "desc": "burge with tomatoes and lettuce",
+    "img": "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=902&q=80",
+    "price": 3.14,
+    "discount": 0.2
+  },
+  {
+    "id": "10005",
+    "name": "Pizza",
+    "desc": "pizza with berries",
+    "img": "https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2250&q=80",
+    "price": 6.88,
+    "discount": 0.3
+  },
+  {
+    "id": "10006",
+    "name": "Salad",
+    "desc": "bowl of vegetable salads",
+    "img": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80",
+    "price": 4.99,
+    "discount": 0.2
+  }
+]

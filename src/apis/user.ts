@@ -1,11 +1,21 @@
-import { result, AxioFunc } from '@/utils/axios'
+import { result } from '@/utils/axios'
 
-export const getUserByPhone: AxioFunc = (
-  params: Record<string, unknown> = {},
-) => {
+export function getUserByPhone<T, U>(params: T): Promise<U | void> {
   return result('get', '/users', params)
 }
 
-export const createUser: AxioFunc = (params: Record<string, unknown> = {}) => {
+export function getAllAddresses<T, U>(params: T): Promise<U | void> {
+  return result('get', '/addresses', params)
+}
+
+export function createUser<T, U>(params: T): Promise<U | void> {
   return result('post', '/users', params)
+}
+
+export function createAddress<T, U>(params: T): Promise<U | void> {
+  return result('post', '/addresses', params)
+}
+
+export function deleteAddress<T, U>(params: T): Promise<U | void> {
+  return result('del', '/addresses', params)
 }
