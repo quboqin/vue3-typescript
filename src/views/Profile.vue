@@ -23,7 +23,7 @@
           round
           width="3rem"
           height="3rem"
-          src="@/assets/avatar.jpg"
+          :src="avatar"
         />
         <div class="ml-2 text-gray-600 text-left">
           <div class="font-semibold">QQB</div>
@@ -47,7 +47,7 @@
       <hr class="bg-gray-800 my-2" />
       <div class="flex justify-between py-2 px-4">
         <div class="" v-for="(type, index) in orderTypes" :key="index">
-          <img class="mx-auto h-8 w-8" src="orderIcons[index]" />
+          <img class="mx-auto h-8 w-8" :src="orderIcons[index]" />
           <div class="text-center text-xs">
             {{ type }}
           </div>
@@ -135,10 +135,11 @@ export default defineComponent({
 
     const state = reactive({
       orderTypes: ['全部订单', '待付款', '待发货'],
+      avatar: require('../assets/avatar.jpg'),
       orderIcons: [
-        '@/assets/icons8-clock-64.png',
-        '@/assets/icons8-box-64.png',
-        '@/assets/icons8-boot-open-64.png',
+        require('../assets/icons8-clock-64.png'),
+        require('../assets/icons8-box-64.png'),
+        require('../assets/icons8-boot-open-64.png'),
       ],
     })
 
