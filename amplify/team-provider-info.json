@@ -53,10 +53,22 @@
         "vue3typescript360b0231": {}
       },
       "function": {
-        "vue3typescript360b0231DefineAuthChallenge": {},
-        "vue3typescript360b0231CreateAuthChallenge": {},
-        "vue3typescript360b0231VerifyAuthChallengeResponse": {},
-        "vue3typescript360b0231PreSignup": {}
+        "vue3typescript360b0231DefineAuthChallenge": {
+          "deploymentBucketName": "amplify-vue3typescript-online-191406-deployment",
+          "s3Key": "amplify-builds/vue3typescript360b0231DefineAuthChallenge-6e30564f5257432f6849-build.zip"
+        },
+        "vue3typescript360b0231CreateAuthChallenge": {
+          "deploymentBucketName": "amplify-vue3typescript-online-191406-deployment",
+          "s3Key": "amplify-builds/vue3typescript360b0231CreateAuthChallenge-334b3574445037314f38-build.zip"
+        },
+        "vue3typescript360b0231VerifyAuthChallengeResponse": {
+          "deploymentBucketName": "amplify-vue3typescript-online-191406-deployment",
+          "s3Key": "amplify-builds/vue3typescript360b0231VerifyAuthChallengeResponse-526c783454485a634b79-build.zip"
+        },
+        "vue3typescript360b0231PreSignup": {
+          "deploymentBucketName": "amplify-vue3typescript-online-191406-deployment",
+          "s3Key": "amplify-builds/vue3typescript360b0231PreSignup-2b4c765759394b765139-build.zip"
+        }
       }
     }
   }
