@@ -13,7 +13,7 @@ axios.defaults.headers.post['Content-Type'] =
   'application/x-www-form-urlencoded;charset=UTF-8'
 
 axios.interceptors.request.use(
-  async config => {
+  async (config) => {
     const session = await getCurrentSession()
     if (session) {
       config.headers.Authorization = `Bearer ${session
@@ -24,7 +24,7 @@ axios.interceptors.request.use(
     }
     return config
   },
-  error => {
+  (error) => {
     return Promise.reject(error)
   },
 )
@@ -35,10 +35,10 @@ function get<T, U>(path: string, params: T): Promise<U> {
       .get(path, {
         params: params,
       })
-      .then(response => {
+      .then((response) => {
         resolve(response.data)
       })
-      .catch(error => {
+      .catch((error) => {
         reject(error)
       })
   })
@@ -48,10 +48,10 @@ function post<T, U>(path: string, params: T): Promise<U> {
   return new Promise((resolve, reject) => {
     axios
       .post(path, params)
-      .then(response => {
+      .then((response) => {
         resolve(response.data)
       })
-      .catch(error => {
+      .catch((error) => {
         reject(error)
       })
   })
@@ -61,10 +61,10 @@ function put<T, U>(path: string, params: T): Promise<U> {
   return new Promise((resolve, reject) => {
     axios
       .put(path, params)
-      .then(response => {
+      .then((response) => {
         resolve(response.data)
       })
-      .catch(error => {
+      .catch((error) => {
         reject(error)
       })
   })
@@ -76,10 +76,10 @@ function del<T, U>(path: string, params: T): Promise<U> {
       .delete(path, {
         params: params,
       })
-      .then(response => {
+      .then((response) => {
         resolve(response.data)
       })
-      .catch(error => {
+      .catch((error) => {
         reject(error)
       })
   })
@@ -99,7 +99,7 @@ export function request<T, U>(
   } else if (method === 'put') {
     return put(path, params)
   } else {
-    return new Promise<void>(resolve => resolve())
+    return new Promise<void>((resolve) => resolve())
   }
 }
 
@@ -108,10 +108,10 @@ export type AxioFunc<T, U> = (params: T) => Promise<U | void>
 export function result<T, U>(
   method: string,
   path: string,
-  params: T,
+  params?: T,
   mockData?: U,
 ): Promise<U | void> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     if (mockData) return resolve(mockData)
     return resolve(request(method, path, params))
   })

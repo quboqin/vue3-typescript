@@ -41,11 +41,11 @@ export default defineComponent({
   props: {
     firstName: {
       type: String,
-      required: true,
+      required: false,
     },
     lastName: {
       type: String,
-      required: true,
+      required: false,
     },
     address: {
       type: Object as PropType<Address>,

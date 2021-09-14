@@ -1,19 +1,21 @@
 import { result } from '@/utils/axios'
+import { User } from 'quboqin-lib-typescript/lib/user'
+import { Address } from 'quboqin-lib-typescript/lib/address'
 
-export function getUserByPhone<T, U>(params: T): Promise<U | void> {
-  return result('get', '/users', params)
+export function getUserByPhone<T>(params: T): Promise<User> {
+  return result('get', '/users', params) as Promise<User>
 }
 
-export function getAllAddresses<T, U>(params: T): Promise<U | void> {
-  return result('get', '/addresses', params)
+export function getAllAddresses<T>(params: T): Promise<Address[]> {
+  return result('get', '/addresses', params) as Promise<Address[]>
 }
 
 export function createUser<T, U>(params: T): Promise<U | void> {
   return result('post', '/users', params)
 }
 
-export function createAddress<T, U>(params: T): Promise<U | void> {
-  return result('post', '/addresses', params)
+export function createAddress<T>(params: T): Promise<Address> {
+  return result('post', '/addresses', params) as Promise<Address>
 }
 
 export function deleteAddress<T, U>(params: T): Promise<U | void> {
