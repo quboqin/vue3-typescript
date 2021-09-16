@@ -3,8 +3,7 @@ import axios from 'axios'
 import { getCurrentSession, getUser } from '@/utils/aws-auth'
 
 const port = process.env.VUE_APP_PORT
-const url = process.env.VUE_APP_URL ?? process.env.VUE_APP_BASE_URL
-console.log(process.env.VUE_APP_BASE_URL)
+const url = process.env.VUE_APP_BASE_URL
 axios.defaults.baseURL = port ? `${url}:${process.env.VUE_APP_PORT}` : `${url}`
 axios.defaults.timeout = process.env.VUE_APP_TIMEOUT
   ? +process.env.VUE_APP_TIMEOUT
@@ -102,8 +101,6 @@ export function request<T, U>(
     return new Promise<void>((resolve) => resolve())
   }
 }
-
-export type AxioFunc<T, U> = (params: T) => Promise<U | void>
 
 export function result<T, U>(
   method: string,
