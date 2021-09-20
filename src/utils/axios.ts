@@ -28,6 +28,20 @@ axios.interceptors.request.use(
   },
 )
 
+axios.interceptors.response.use(
+  (response) => {
+    if (response.status === 200 || response.status === 204) {
+      return Promise.resolve(response)
+    } else {
+      return Promise.reject(response)
+    }
+  },
+  (error) => {
+    if (error.status === 401) console.log('login failed')
+    return Promise.reject(error)
+  },
+)
+
 function get<T, U>(path: string, params: T): Promise<U> {
   return new Promise((resolve, reject) => {
     axios
@@ -35,7 +49,7 @@ function get<T, U>(path: string, params: T): Promise<U> {
         params: params,
       })
       .then((response) => {
-        resolve(response.data)
+        resolve(response.data.data)
       })
       .catch((error) => {
         reject(error)
@@ -48,7 +62,7 @@ function post<T, U>(path: string, params: T): Promise<U> {
     axios
       .post(path, params)
       .then((response) => {
-        resolve(response.data)
+        resolve(response.data.data)
       })
       .catch((error) => {
         reject(error)
@@ -61,7 +75,7 @@ function put<T, U>(path: string, params: T): Promise<U> {
     axios
       .put(path, params)
       .then((response) => {
-        resolve(response.data)
+        resolve(response.data.data)
       })
       .catch((error) => {
         reject(error)
@@ -76,7 +90,7 @@ function del<T, U>(path: string, params: T): Promise<U> {
         params: params,
       })
       .then((response) => {
-        resolve(response.data)
+        resolve(response.data.data)
       })
       .catch((error) => {
         reject(error)

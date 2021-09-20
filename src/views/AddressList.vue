@@ -74,6 +74,11 @@ export default defineComponent({
         phone: state.phone,
       })
 
+      await getAllAddresses({
+        phone: state.phone,
+        id: state.addresses[0].id,
+      })
+
       const user = await getUserByPhone({
         phone: state.phone,
       })

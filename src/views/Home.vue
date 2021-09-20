@@ -122,7 +122,6 @@ export default defineComponent({
 
     const init = async () => {
       state.goods = await getAllGoods()
-      console.log(state.goods)
     }
     onMounted(init)
 
