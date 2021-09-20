@@ -84,15 +84,15 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter()
-    const { userInfo, setCognitoUser, setUserInfo } = userAuthInject()
+    const { userInfo, setCognitoUser, setUser } = userAuthInject()
 
     const maxCount = 120
 
     const state = reactive({
-      phone: userInfo.user.phone,
-      firstName: userInfo.user.firstName,
-      lastName: userInfo.user.lastName,
-      email: userInfo.user.email,
+      phone: userInfo.user?.phone ?? '+13233013227',
+      firstName: userInfo.user?.firstName ?? 'Qubo',
+      lastName: userInfo.user?.lastName ?? 'Qin',
+      email: userInfo.user?.email,
       code: '',
       active: 0,
       disabled: false,
@@ -140,15 +140,12 @@ export default defineComponent({
           await sendCustomChallengeAnswer(cognitoUser, state.code)
 
           const user = new User()
-          user.phone = state.phone
-          user.firstName = state.firstName
-          user.lastName = state.lastName
+          user.phone = state.phone ? state.phone : ''
+          user.firstName = state.firstName ? state.firstName : ''
+          user.lastName = state.lastName ? state.lastName : ''
           await createUser(user)
 
-          setUserInfo({
-            cognitoUser: cognitoUser,
-            user: user,
-          })
+          setUser(user)
           router.push({
             path: '/profile',
           })

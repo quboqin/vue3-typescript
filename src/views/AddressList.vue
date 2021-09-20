@@ -27,8 +27,6 @@ import AddressCell from '@/components/AddressCell.vue'
 
 import { userAuthInject } from '@/store/user'
 import { getUserByPhone, getAllAddresses } from '@/apis/user'
-import { Address } from 'quboqin-lib-typescript/lib/address'
-import { User } from 'quboqin-lib-typescript/lib/user'
 
 export default defineComponent({
   name: 'AddressList',
@@ -38,14 +36,14 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter()
-    const { userInfo, setUserInfo } = userAuthInject()
+    const { userInfo, setUser, setCognitoUser } = userAuthInject()
 
     const state = reactive({
-      phone: userInfo.user.phone,
-      firstName: userInfo.user.firstName,
-      lastName: userInfo.user.lastName,
-      defaultAddress: userInfo.user.defaultAddress,
-      addresses: userInfo.user.addresses ? userInfo.user.addresses : [],
+      phone: userInfo.user?.phone,
+      firstName: userInfo.user?.firstName,
+      lastName: userInfo.user?.lastName,
+      defaultAddress: userInfo.user?.defaultAddress,
+      addresses: userInfo.user?.addresses ? userInfo.user.addresses : [],
     })
 
     function onEditAddress(index: number) {
@@ -72,18 +70,22 @@ export default defineComponent({
     }
 
     const init = async () => {
-      state.addresses = (await getAllAddresses({
+      state.addresses = await getAllAddresses({
         phone: state.phone,
-      })) as Address[]
-
-      const user = (await getUserByPhone({
-        phone: state.phone,
-      })) as User
-
-      setUserInfo({
-        cognitoUser: userInfo.cognitoUser,
-        user: user,
       })
+
+      await getAllAddresses({
+        phone: state.phone,
+        id: state.addresses[0].id,
+      })
+
+      const user = await getUserByPhone({
+        phone: state.phone,
+      })
+
+      setCognitoUser(userInfo.cognitoUser)
+
+      setUser(user)
     }
     onMounted(init)
 

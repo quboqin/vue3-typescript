@@ -131,7 +131,7 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter()
-    const { userInfo, setUserInfo } = userAuthInject()
+    const { userInfo, setUser } = userAuthInject()
 
     const state = reactive({
       orderTypes: ['全部订单', '待付款', '待发货'],
@@ -157,25 +157,18 @@ export default defineComponent({
 
     async function onLogout() {
       await signOut()
-      setUserInfo({
-        user: new User(),
-        cognitoUser: undefined,
-        cart: undefined,
-      })
+      setUser(new User())
       router.push({
         path: '/',
       })
     }
 
     const init = async () => {
-      const user = (await getUserByPhone({
-        phone: userInfo.user.phone,
-      })) as User
-
-      setUserInfo({
-        user: user,
-        cognitoUser: userInfo.cognitoUser,
+      const user = await getUserByPhone({
+        phone: userInfo.user?.phone,
       })
+
+      setUser(user)
     }
     onMounted(init)
 

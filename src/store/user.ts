@@ -5,7 +5,7 @@ import { User } from 'quboqin-lib-typescript/lib/user'
 import { Item } from 'quboqin-lib-typescript/lib/item'
 
 export interface UserInfo {
-  user: User
+  user?: User
   cognitoUser?: CognitoUser
   cart?: {
     items?: Item[]
@@ -19,18 +19,18 @@ export interface UserInfo {
 
 type UserInfoContext = {
   userInfo: UserInfo
-  setCognitoUser: (cognitoUser: CognitoUser) => void
-  setUserInfo: (newUser: UserInfo) => void
+  setCognitoUser: (cognitoUser?: CognitoUser) => void
+  setUser: (newUser?: User) => void
   addCart: (newItem: Item) => void
   removeItem: (index: number) => void
 }
 
 const UserAuthSymbol = Symbol()
 
-export const userAuthProvide: (newUser: UserInfo) => void = newUser => {
+export const userAuthProvide: (newUser: UserInfo) => void = (newUser) => {
   function updateTotalPrice() {
     let price = 0.0
-    userInfo.cart?.items?.forEach(item => {
+    userInfo.cart?.items?.forEach((item) => {
       price += item.amount * item.price
     })
     if (userInfo.cart) {
@@ -43,8 +43,8 @@ export const userAuthProvide: (newUser: UserInfo) => void = newUser => {
   const setCognitoUser = (cognitoUser: CognitoUser) =>
     (userInfo.cognitoUser = cognitoUser)
 
-  const setUserInfo = (newUser: UserInfo) => {
-    Object.assign(userInfo, newUser)
+  const setUser = (newUser: UserInfo) => {
+    Object.assign(userInfo.user, newUser)
   }
 
   const addCart = (newItem: Item) => {
@@ -60,7 +60,7 @@ export const userAuthProvide: (newUser: UserInfo) => void = newUser => {
   provide(UserAuthSymbol, {
     userInfo,
     setCognitoUser,
-    setUserInfo,
+    setUser,
     addCart,
     removeItem,
   })

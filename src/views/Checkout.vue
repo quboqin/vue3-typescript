@@ -30,7 +30,7 @@
     >
       <div class="w-2/3">
         <div class="text-left font-semibold text-base text-gray-800">
-          {{ `${user.firstName} ${user.lastName}` }}
+          {{ `${user?.firstName} ${user?.lastName}` }}
         </div>
         <div class="text-left text-xs text-gray-400 overflow-ellipsis">
           {{ address.street }}
@@ -149,7 +149,7 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter()
-    const { userInfo, setUserInfo } = userAuthInject()
+    const { userInfo, setUser } = userAuthInject()
 
     const state = reactive({
       totalPrice: userInfo.cart?.totalPrice,
@@ -159,7 +159,7 @@ export default defineComponent({
     const address: Ref<Address> = computed(() => {
       const defaultAddress = userInfo.user?.defaultAddress
       if (userInfo.user?.addresses) {
-        const _address = userInfo.user.addresses.find(address =>
+        const _address = userInfo.user.addresses.find((address) =>
           defaultAddress?.includes(address.id),
         ) as Address
         return _address
@@ -171,7 +171,7 @@ export default defineComponent({
     const creditCard: Ref<Card> = computed(() => {
       const defaultCard = userInfo.user?.defaultCard
       if (userInfo.user?.cards) {
-        const _card = userInfo.user.cards.find(card =>
+        const _card = userInfo.user.cards.find((card) =>
           defaultCard?.includes(card.last4),
         ) as Card
         return _card
@@ -184,7 +184,7 @@ export default defineComponent({
       await payOrder({
         last4: creditCard.value.last4,
         amount: userInfo.cart?.totalPrice,
-        phone: userInfo.user.phone,
+        phone: userInfo.user?.phone,
         items: userInfo.cart?.items,
       })
       router.push({
@@ -194,13 +194,10 @@ export default defineComponent({
 
     const init = async () => {
       const user = (await getUserByPhone({
-        phone: userInfo.user.phone,
+        phone: userInfo.user?.phone,
       })) as User
 
-      setUserInfo({
-        cognitoUser: userInfo.cognitoUser,
-        user: user,
-      })
+      setUser(user)
     }
     onMounted(init)
 

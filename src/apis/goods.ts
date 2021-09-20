@@ -1,5 +1,7 @@
 import { result } from '@/utils/axios'
 
-export function getAllGoods<T, U>(params: T): Promise<U | void> {
-  return result('get', '/goods', params)
+import { Good } from 'quboqin-lib-typescript/lib/goods'
+
+export function getAllGoods(): Promise<Good[]> {
+  return result('get', '/goods') as Promise<Good[]>
 }

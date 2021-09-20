@@ -33,7 +33,7 @@ export default defineComponent({
     userAuthProvide(newUser)
 
     const init = async () => {
-      checkHealth({})
+      checkHealth()
     }
     onMounted(init)
   },

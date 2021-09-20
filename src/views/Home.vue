@@ -84,14 +84,14 @@ export default defineComponent({
         if (state.searchQuery === '') {
           return state.goods
         } else {
-          return state.goods.filter(item => {
+          return state.goods.filter((item) => {
             return item.name
               .toLowerCase()
               .includes(state.searchQuery.toLowerCase())
           })
         }
       } else {
-        return state.goods.filter(item => {
+        return state.goods.filter((item) => {
           return item.category.includes(category)
         })
       }
@@ -114,14 +114,14 @@ export default defineComponent({
 
     watch(
       () => state.searchQuery,
-      newValue => {
+      (newValue) => {
         console.log('The new search value is: ' + newValue)
         tabsRef.value?.scrollTo(0)
       },
     )
 
     const init = async () => {
-      state.goods = (await getAllGoods({})) as Good[]
+      state.goods = await getAllGoods()
     }
     onMounted(init)
 

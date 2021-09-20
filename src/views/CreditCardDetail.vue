@@ -70,7 +70,7 @@ export default defineComponent({
       } else {
         // Send the token to your server.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const card: Card = (await createCard({
+        const card: Card = await createCard({
           stripeToken: token.id,
           phone: state.phone,
           cardInfo: {
@@ -80,7 +80,7 @@ export default defineComponent({
             expirationYear: result.source?.card?.exp_year,
             last4: result.source?.card?.last4,
           },
-        })) as Card
+        })
 
         if (card.last4 === result.source?.card?.last4) {
           console.log('')

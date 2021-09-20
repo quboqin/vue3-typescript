@@ -40,9 +40,9 @@ export default defineComponent({
     })
 
     const init = async () => {
-      state.orders = (await getAllOrders({
-        phone: userInfo.user.phone,
-      })) as Order[]
+      state.orders = await getAllOrders({
+        phone: userInfo.user?.phone,
+      })
     }
     onMounted(init)
 

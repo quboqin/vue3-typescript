@@ -26,8 +26,6 @@ import CreditCardCell from '@/components/CreditCardCell.vue'
 import { userAuthInject } from '@/store/user'
 import { getAllCards } from '@/apis/card'
 import { getUserByPhone } from '@/apis/user'
-import { Card } from 'quboqin-lib-typescript/lib/card'
-import { User } from 'quboqin-lib-typescript/lib/user'
 
 export default defineComponent({
   name: 'CreditCardList',
@@ -37,12 +35,12 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter()
-    const { userInfo, setUserInfo } = userAuthInject()
+    const { userInfo, setUser } = userAuthInject()
 
     const state = reactive({
-      phone: userInfo.user.phone,
-      defaultCard: userInfo.user.defaultCard,
-      cards: userInfo.user.cards ? userInfo.user.cards : [],
+      phone: userInfo.user?.phone,
+      defaultCard: userInfo.user?.defaultCard,
+      cards: userInfo.user?.cards ? userInfo.user.cards : [],
     })
 
     function onEditCreditCard() {
@@ -64,18 +62,15 @@ export default defineComponent({
     }
 
     const init = async () => {
-      state.cards = (await getAllCards({
+      state.cards = await getAllCards({
         phone: state.phone,
-      })) as Card[]
-
-      const user = (await getUserByPhone({
-        phone: state.phone,
-      })) as User
-
-      setUserInfo({
-        cognitoUser: userInfo.cognitoUser,
-        user: user,
       })
+
+      const user = await getUserByPhone({
+        phone: state.phone,
+      })
+
+      setUser(user)
     }
     onMounted(init)
 

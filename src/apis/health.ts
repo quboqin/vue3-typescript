@@ -1,5 +1,5 @@
 import { result } from '@/utils/axios'
 
-export function checkHealth<T, U>(params: T): Promise<U | void> {
-  return result('get', '/health', params)
+export function checkHealth<U>(): Promise<U | void> {
+  return result('get', '/health')
 }
