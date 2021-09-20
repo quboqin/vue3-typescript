@@ -15,7 +15,7 @@
       "function": {
         "vue3typescript360b0231DefineAuthChallenge": {
           "deploymentBucketName": "amplify-vue3typescript-dev-165923-deployment",
-          "s3Key": "amplify-builds/vue3typescript360b0231DefineAuthChallenge-4d795851444773446c77-build.zip"
+          "s3Key": "amplify-builds/vue3typescript360b0231DefineAuthChallenge-6e30564f5257432f6849-build.zip"
         },
         "vue3typescript360b0231CreateAuthChallenge": {
           "CHALLENGEANSWER": "",
@@ -24,11 +24,11 @@
         },
         "vue3typescript360b0231VerifyAuthChallengeResponse": {
           "deploymentBucketName": "amplify-vue3typescript-dev-165923-deployment",
-          "s3Key": "amplify-builds/vue3typescript360b0231VerifyAuthChallengeResponse-2b697777766464584268-build.zip"
+          "s3Key": "amplify-builds/vue3typescript360b0231VerifyAuthChallengeResponse-526c783454485a634b79-build.zip"
         },
         "vue3typescript360b0231PreSignup": {
           "deploymentBucketName": "amplify-vue3typescript-dev-165923-deployment",
-          "s3Key": "amplify-builds/vue3typescript360b0231PreSignup-32635877676c44313173-build.zip"
+          "s3Key": "amplify-builds/vue3typescript360b0231PreSignup-2b4c765759394b765139-build.zip"
         }
       },
       "auth": {
