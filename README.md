@@ -1,46 +1,6 @@
-# # 基于 Typescript 的全栈工程模版 - 前端 Vue3
-
+# 基于 Typescript 的全栈工程模版 - 前端 Vue3
+Weex Clone是基于Tyepscript开发的一套简单的点餐应用。作为一个全栈开发的完整实例，这个应用包括了基于Node.js和Koa框架的后端实现，也包含了基于Vue3开发的前端工程。这个仓库是一个完整前端的实现，采用了AWS的Cognito作为用户的鉴权(Authentication)。除了代码的实现，也包括了完整的CI/CD的发布流程。前端系统默认部署在Heroku，但是也可以通过Amplify部署在AWS上，或自己搭建的VPS Nginx上。<br>
 参考[基于 Typescript 的全栈工程模版 - 后端 Node.js + Koa2](https://github.com/quboqin/node-koa2-typescript)
-
-## Project setup
-
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-
-```
-npm run build
-```
-
-### Run your unit tests
-
-```
-npm run test:unit
-```
-
-### Run your end-to-end tests
-
-```
-npm run test:e2e
-```
-
-### Lints and fixes files
-
-```
-npm run lint
-```
-
-### Customize configuration
-
-See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## 用命令行 vue-cli 创建 vue3 的应用框架
 
@@ -338,4 +298,3 @@ amplify add fucntion
 ![aws-sns-profile](./doc/aws-sns-profile.png)
 #### 前端改造
 
-#### 后端 Check JWT token 的合法性
