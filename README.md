@@ -18,8 +18,8 @@ npm update -g @vue/cli
 
 2. 创建应用
 
-- ![vue-create-app](./doc/vue-create-app.png)
-- ![vue-select-options](./doc/vue-select-options.png)
+- ![vue-create-app](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/vue-create-app.png)
+- ![vue-select-options](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/vue-select-options.png)
 
 ### Lint
 
@@ -114,7 +114,7 @@ server {
 建立对应的目录，在目录下放测试 html
 
 - 修改 Cloudflare，添加三条 A 记录，支持 VPS 的 IP
-  ![cloudflare-static](./doc/cloudflare-static.png)
+  ![cloudflare-static](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/cloudflare-static.png)
 
 - 通过 Let's Encrypt 修改 nginx 的 https 支持
   安装 certbot 见 Node Server 的部署
@@ -123,14 +123,14 @@ server {
 certbot -nginx
 ```
 
-![certbot-static](./doc/certbot-static.png) 2. 编写 Github Actions 部署脚本
+![certbot-static](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/certbot-static.png) 2. 编写 Github Actions 部署脚本
 
 2. 在 .github/workflows 下添加 Github Actions
    **注意不要添加 NODE_ENV=production，设置了这个后 npm ci 不会 install devDependencies 下的模块，会导致 npm run build 报错无法找到 vue-cli-service**
    **Vue 的 Webpack 会根据 --mode [staging | production ] 找到对应的 .env.\* 文件， 在这些中再声明 NODE_ENV=production**
 
 3. 在 Github 的仓库设置中，给 Actions 用到的添加加密的 Secrets
-   ![github-secrets](./doc/github-secrets.png)
+   ![github-secrets](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/github-secrets.png)
    **DEPLOY_ORACLE=/usr/share/nginx/html**
 
 ### 部署到 Heroku
@@ -171,7 +171,7 @@ heroku buildpacks:add https://github.com/heroku/heroku-buildpack-static
 amplify init
 ```
 
-![amplify-init](./doc/amplify-init.png)
+![amplify-init](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/amplify-init.png)
 
 2. 同时创建了一个后端环境，先命名为 `dev`
 3. 进入 AWS Console， 到 Amplify 下，进入刚才创建的 `vue3typescript APP`。连接 Github 仓库和对应的 aws-staging 分支。并在关联的后端服务上选择 `staging`
@@ -182,7 +182,7 @@ amplify env add
 ```
 
 然后在 Amplify 后台的 aws-production 前端环境绑定 `online`
-![amplify-env-backend](./doc/amplify-env-backend.png)
+![amplify-env-backend](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/amplify-env-backend.png)
 
 #### 创建 amplify.yaml 文件，修改 build 的脚本
 
@@ -217,7 +217,7 @@ frontend:
 
 #### 设置环境相关的变量
 
-![amplify-env](./doc/amplify-env.png)
+![amplify-env](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/amplify-env.png)
 这里的 VUE_APP_URL 是在 **编译** 时候，覆盖 axios 默认的 BASE_URL，指向对应的 Node Server，不同的分支也可以有不同的 Value
 **注意不要添加 NODE_ENV=production，设置了这个后 npm ci 不会 install devDependencies 下的模块，会导致 npm run build 报错无法找到 vue-cli-service**
 **Vue 的 Webpack 会根据 --mode [staging | production ] 找到对应的 .env.\* 文件， 在这些中再声明 NODE_ENV=production**
@@ -230,7 +230,7 @@ npm i aws-amplify aws-amplify-vue
 #### 创建 Amplify 角色
 
 **创建 Amplify APP 时，好像没有自动创建关联的 Role**, 我手动创建了一个
-![aws-role-amplify](./doc/aws-role-amplify.png)
+![aws-role-amplify](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/aws-role-amplify.png)
 
 ## Cognito 和 JWT 的支持
 ### 手机短信登入
@@ -265,36 +265,36 @@ amplify env checkout <env-name> [--restore]
 ```
 - amplify 的前端环境可以选择不同的后端环境绑定
   - 在 Amplify 后台， staging 和 production 的前端环境，绑定了 online 后端环境
-  ![aws-amplify-online](./doc/aws-amplify-online.png)
+  ![aws-amplify-online](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/aws-amplify-online.png)
   - 在本地的开发环境下，可以通过命令行灵活的切换环境 
 
-![amplify-backend-env](./doc/amplify-backend-env.png)
+![amplify-backend-env](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/amplify-backend-env.png)
 ##### 添加 Auth 和 Lambda
 1. 添加 Auth 和 默认的 Lambda functions
 ```shell
 amplify add auth
 ```
-![aws-amplify-custom-auth-1](./doc/aws-amplify-custom-auth-1.png)
-![aws-amplify-custom-auth-2](./doc/aws-amplify-custom-auth-2.png)
-![aws-amplify-custom-auth-3](./doc/aws-amplify-custom-auth-3.png)
-![aws-amplify-custom-auth-4](./doc/aws-amplify-custom-auth-4.png)
+![aws-amplify-custom-auth-1](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/aws-amplify-custom-auth-1.png)
+![aws-amplify-custom-auth-2](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/aws-amplify-custom-auth-2.png)
+![aws-amplify-custom-auth-3](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/aws-amplify-custom-auth-3.png)
+![aws-amplify-custom-auth-4](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/aws-amplify-custom-auth-4.png)
 
 2. 手动添加一个 PreSignup Lambda Function
 ```shell
 amplify add fucntion
 ```
-![aws-auth-function-presignup-1](./doc/aws-auth-function-presignup-1.png)
+![aws-auth-function-presignup-1](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/aws-auth-function-presignup-1.png)
 
 去 Cognito 的 User Pool 后台，手动绑定 Trigger
-![aws-auth-function-presignup-2](./doc/aws-auth-function-presignup-2.png)
+![aws-auth-function-presignup-2](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/aws-auth-function-presignup-2.png)
 
 3. 让 vue3typescript360b0231CreateAuthChallenge
 有发送 SNS 的权限
 进入 Lambda 的 后台页面，找到不同环境下的 vue3typescript360b0231CreateAuthChallenge 函数
 找到对应的 Role，在Role的后台添加 SNS 权限
-![aws-cognito-sns-permision](./doc/aws-cognito-sns-permision.png)
+![aws-cognito-sns-permision](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/aws-cognito-sns-permision.png)
 
 4. 配置 SNS
-![aws-sns-profile](./doc/aws-sns-profile.png)
+![aws-sns-profile](https://cdn.jsdelivr.net/gh/quboqin/images@main/blogs/pictures/aws-sns-profile.png)
 #### 前端改造
 
