@@ -18,7 +18,7 @@ export default defineComponent({
     user.firstName = 'Qubo'
     user.lastName = 'Qin'
 
-    const newUser: UserInfo = reactive({
+    const newUser: UserInfo = {
       user: user,
       cart: {
         deliverFee: 0.0,
@@ -28,7 +28,7 @@ export default defineComponent({
         tips: 0.0,
         items: [] as Item[],
       },
-    })
+    }
 
     userAuthProvide(newUser)
 
